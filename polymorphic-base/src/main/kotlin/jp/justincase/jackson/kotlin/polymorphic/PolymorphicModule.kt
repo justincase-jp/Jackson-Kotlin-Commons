@@ -8,5 +8,6 @@ class PolymorphicModule : SimpleModule() {
     super.setupModule(context)
 
     context.addBeanSerializerModifier(PolymorphicSerializerModifier)
+    context.addBeanDeserializerModifier(PolymorphicDeserializerModifier)
   }
 }
