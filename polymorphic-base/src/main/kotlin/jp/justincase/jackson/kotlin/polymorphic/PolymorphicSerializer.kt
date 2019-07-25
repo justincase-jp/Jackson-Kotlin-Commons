@@ -7,7 +7,7 @@ import com.fasterxml.jackson.databind.SerializerProvider
 internal
 class PolymorphicSerializer<T : Any>(
     private
-    val polymorphic: Polymorphic<in T>,
+    val polymorphic: Polymorphic,
     private
     val unwrappedDelegate: (T, JsonGenerator, SerializerProvider) -> Unit
 ) : JsonSerializer<T>() {

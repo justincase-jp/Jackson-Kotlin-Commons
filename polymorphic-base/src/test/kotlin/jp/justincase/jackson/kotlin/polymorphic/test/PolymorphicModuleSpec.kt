@@ -7,7 +7,7 @@ import jp.justincase.jackson.kotlin.polymorphic.Polymorphic
 import jp.justincase.jackson.kotlin.polymorphic.PolymorphicModule
 
 sealed class Base {
-  companion object : Polymorphic<Base>
+  companion object : Polymorphic
 
   data class Impl(
       val prop1: String,

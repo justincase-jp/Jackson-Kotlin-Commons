@@ -7,6 +7,6 @@ class PolymorphicModule : SimpleModule() {
   fun setupModule(context: SetupContext) {
     super.setupModule(context)
 
-    context.addBeanSerializerModifier(PolymorphicSerializerModifier())
+    context.addBeanSerializerModifier(PolymorphicSerializerModifier)
   }
 }

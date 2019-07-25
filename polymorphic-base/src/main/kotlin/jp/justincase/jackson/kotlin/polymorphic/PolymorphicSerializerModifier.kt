@@ -6,10 +6,9 @@ import com.fasterxml.jackson.databind.SerializationConfig
 import com.fasterxml.jackson.databind.ser.BeanSerializerModifier
 import kotlin.reflect.KClass
 import kotlin.reflect.full.companionObjectInstance
-import kotlin.reflect.full.isSuperclassOf
 
 internal
-class PolymorphicSerializerModifier : BeanSerializerModifier() {
+object PolymorphicSerializerModifier : BeanSerializerModifier() {
   override
   fun modifySerializer(
       config: SerializationConfig,
@@ -28,29 +27,13 @@ class PolymorphicSerializerModifier : BeanSerializerModifier() {
 
     // Assume the caller is correct
     @Suppress("UNCHECKED_CAST")
-    beanClass as KClass<in T>
+    beanClass as KClass<T>
 
-    val superClasses = generateSequence(beanClass) {
-      val t: Class<*>? = it.java.superclass
-
-      // Super classes share the same lower bound
-      @Suppress("UNCHECKED_CAST")
-      t?.kotlin as? KClass<in T>
-    }
-
-    val modified = superClasses
-        .mapNotNull { it.companionObjectInstance as? Polymorphic<*> }
+    val modified = beanClass
+        .allNonInterfaceSuperclasses
+        .mapNotNull { it.companionObjectInstance as? Polymorphic }
         .firstOrNull()
         ?.let {
-          // Prerequisite for `toTypeName`
-          require(it.parameterType.isSuperclassOf(beanClass)) {
-            "${it.parameterType} needs to be a super class of $beanClass"
-          }
-
-          // `it` shares the same lower bound with `beanClass`
-          @Suppress("UNCHECKED_CAST")
-          it as Polymorphic<in T>
-
           PolymorphicSerializer(it, serializer.unwrappingSerializer(null)::serialize)
         }
 
