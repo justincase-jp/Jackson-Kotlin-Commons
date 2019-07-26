@@ -34,7 +34,11 @@ object PolymorphicSerializerModifier : BeanSerializerModifier() {
         .mapNotNull { it.companionObjectInstance as? Polymorphic }
         .firstOrNull()
         ?.let {
-          PolymorphicSerializer(it, serializer.unwrappingSerializer(null)::serialize)
+          if (it.valueKey == null) {
+            PolymorphicSerializer(it, serializer.unwrappingSerializer(null)::serialize)
+          } else {
+            PolymorphicWrappedSerializer(it, serializer::serialize)
+          }
         }
 
     return modified ?: serializer
