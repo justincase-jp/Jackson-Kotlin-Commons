@@ -35,6 +35,7 @@ sealed class NonPolymorphicBase {
   ) : NonPolymorphicBase()
 }
 
+
 class PolymorphicModuleSpec : WordSpec({
   val mapper = jacksonObjectMapper().registerModule(PolymorphicModule())
 
@@ -53,7 +54,7 @@ class PolymorphicModuleSpec : WordSpec({
       "output type name in `writeValueAsString`" {
         writeValueAsString(impl) shouldBe writeValueAsString(map)
       }
-      "work with Round trip" {
+      "work with round trip" {
         readValue<Base>(writeValueAsString(impl)) shouldBe impl
       }
     }
@@ -92,7 +93,7 @@ class PolymorphicModuleSpec : WordSpec({
       "NOT output type name in `writeValueAsString`" {
         writeValueAsString(impl) shouldBe writeValueAsString(map)
       }
-      "work with Round trip (when the actual type is supplied directly)" {
+      "work with round trip (when the actual type is supplied directly)" {
         readValue<NonPolymorphicBase.Impl>(writeValueAsString(impl)) shouldBe impl
       }
     }
