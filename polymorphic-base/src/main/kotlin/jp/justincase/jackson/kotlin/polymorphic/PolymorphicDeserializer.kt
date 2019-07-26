@@ -79,7 +79,7 @@ class PolymorphicDeserializer<T : Any>(
         } else {
           val out = contextualType
               .toTypeToken()
-              .resolveType(type.java)
+              .getSubtype(type.java)
               .toJavaType(ctxt.typeFactory)
               .let(ctxt::findNonContextualValueDeserializer)
               .deserialize(traversal, ctxt)
