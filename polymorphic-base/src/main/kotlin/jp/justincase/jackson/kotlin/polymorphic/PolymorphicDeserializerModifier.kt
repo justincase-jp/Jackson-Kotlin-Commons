@@ -53,6 +53,7 @@ object PolymorphicDeserializerModifier : BeanDeserializerModifier() {
     } else {
       PolymorphicDeserializer(
           typeTable.rowMap(),
+          beanClass,
           deserializer::deserialize
       )
     }

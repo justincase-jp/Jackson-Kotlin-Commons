@@ -1,5 +1,11 @@
+@file:Suppress("UnstableApiUsage")
 package jp.justincase.jackson.kotlin.polymorphic
 
+import com.fasterxml.jackson.databind.JavaType
+import com.fasterxml.jackson.databind.type.TypeFactory
+import com.google.common.reflect.TypeToken
+import java.lang.reflect.ParameterizedType
+import java.lang.reflect.Type
 import kotlin.reflect.KClass
 import kotlin.reflect.full.companionObjectInstance
 
@@ -26,3 +32,23 @@ fun <T : Any> KClass<T>.leafClassPolymorphicInstances(root: Polymorphic?): Seque
       }
     }
   }
+
+internal
+fun JavaType.toTypeToken() =
+    TypeToken.of(object : ParameterizedType {
+      override
+      fun getRawType(): Type =
+          rawClass
+
+      override
+      fun getActualTypeArguments(): Array<Type> =
+          bindings.typeParameters.toTypedArray()
+
+      override
+      fun getOwnerType(): Type? =
+          null
+    })
+
+internal
+fun TypeToken<*>.toJavaType(factory: TypeFactory) =
+    factory.constructType(type)
