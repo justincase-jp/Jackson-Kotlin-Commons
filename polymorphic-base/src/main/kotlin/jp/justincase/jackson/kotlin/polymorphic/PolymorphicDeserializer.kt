@@ -56,7 +56,13 @@ class PolymorphicDeserializer<T : Any>(
       val (k, t) = matches.next()
 
       if (matches.hasNext()) {
-        ctxt.reportInputMismatch(this, "")
+        val message = matches
+            .asSequence()
+            .joinToString(", ", "Duplicate type definitions ", "and {$k: $t}") { (k, t) ->
+              "{$k: $t}"
+            }
+
+        ctxt.reportInputMismatch(this, message)
       } else {
         node.remove(k)
         val traversal = node.traverse(p.codec)
