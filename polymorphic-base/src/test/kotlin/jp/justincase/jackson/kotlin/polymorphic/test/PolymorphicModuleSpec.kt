@@ -28,6 +28,13 @@ sealed class WrappedBase {
   ) : WrappedBase()
 }
 
+sealed class NonPolymorphicBase {
+  data class Impl(
+      val prop1: String,
+      val prop2: Int
+  ) : NonPolymorphicBase()
+}
+
 class PolymorphicModuleSpec : WordSpec({
   val mapper = jacksonObjectMapper().registerModule(PolymorphicModule())
 
@@ -69,6 +76,24 @@ class PolymorphicModuleSpec : WordSpec({
       }
       "work with Round trip" {
         readValue<WrappedBase>(writeValueAsString(impl)) shouldBe impl
+      }
+    }
+
+    "Non-polymorphic type" should {
+      val impl = NonPolymorphicBase.Impl(
+          prop1 = "a",
+          prop2 = 1
+      )
+      val map = mapOf(
+          "prop1" to "a",
+          "prop2" to 1
+      )
+
+      "NOT output type name in `writeValueAsString`" {
+        writeValueAsString(impl) shouldBe writeValueAsString(map)
+      }
+      "work with Round trip (when the actual type is supplied directly)" {
+        readValue<NonPolymorphicBase.Impl>(writeValueAsString(impl)) shouldBe impl
       }
     }
   }
