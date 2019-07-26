@@ -59,7 +59,7 @@ class PolymorphicDeserializer<T : Any>(
       if (matches.hasNext()) {
         val message = matches
             .asSequence()
-            .joinToString(", ", "Duplicate type definitions ", "and {$key: $type}") { (k, f) ->
+            .joinToString(", ", "Ambiguous type definitions ", "and {$key: $type}") { (k, f) ->
               "{$k: ${f.first}}"
             }
 
