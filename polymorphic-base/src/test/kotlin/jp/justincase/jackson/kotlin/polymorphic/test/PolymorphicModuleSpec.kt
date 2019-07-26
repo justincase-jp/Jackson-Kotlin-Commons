@@ -3,7 +3,7 @@ package jp.justincase.jackson.kotlin.polymorphic.test
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
 import io.kotlintest.shouldBe
-import io.kotlintest.specs.StringSpec
+import io.kotlintest.specs.WordSpec
 import jp.justincase.jackson.kotlin.polymorphic.Polymorphic
 import jp.justincase.jackson.kotlin.polymorphic.PolymorphicModule
 
@@ -16,25 +16,60 @@ sealed class Base {
   ) : Base()
 }
 
-class PolymorphicModuleSpec : StringSpec({
+sealed class WrappedBase {
+  companion object : Polymorphic {
+    override
+    val valueKey = "value"
+  }
+
+  data class Impl(
+      val prop1: String,
+      val prop2: Int
+  ) : WrappedBase()
+}
+
+class PolymorphicModuleSpec : WordSpec({
   val mapper = jacksonObjectMapper().registerModule(PolymorphicModule())
 
-  val impl = Base.Impl(
-      prop1 = "a",
-      prop2 = 1
-  )
-  val map = mapOf(
-      "type" to "Impl",
-      "prop1" to "a",
-      "prop2" to 1
-  )
-
   mapper.apply {
-    "`writeValueAsString` should output type name" {
-      writeValueAsString(impl) shouldBe writeValueAsString(map)
+    "Flat polymorphic type" should {
+      val impl = Base.Impl(
+          prop1 = "a",
+          prop2 = 1
+      )
+      val map = mapOf(
+          "type" to "Impl",
+          "prop1" to "a",
+          "prop2" to 1
+      )
+
+      "output type name in `writeValueAsString`" {
+        writeValueAsString(impl) shouldBe writeValueAsString(map)
+      }
+      "work with Round trip" {
+        readValue<Base>(writeValueAsString(impl)) shouldBe impl
+      }
     }
-    "Round trip should work" {
-      readValue<Base>(writeValueAsString(impl)) shouldBe impl
+
+    "Wrapped polymorphic type" should {
+      val impl = WrappedBase.Impl(
+          prop1 = "a",
+          prop2 = 1
+      )
+      val map = mapOf(
+          "type" to "Impl",
+          "value" to mapOf(
+              "prop1" to "a",
+              "prop2" to 1
+          )
+      )
+
+      "output type name in `writeValueAsString`" {
+        writeValueAsString(impl) shouldBe writeValueAsString(map)
+      }
+      "work with Round trip" {
+        readValue<WrappedBase>(writeValueAsString(impl)) shouldBe impl
+      }
     }
   }
 })

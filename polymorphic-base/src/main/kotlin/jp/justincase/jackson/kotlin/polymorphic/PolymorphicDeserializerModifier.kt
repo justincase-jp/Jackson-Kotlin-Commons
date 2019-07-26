@@ -31,17 +31,15 @@ object PolymorphicDeserializerModifier : BeanDeserializerModifier() {
     beanClass as KClass<T>
 
     val typeTable = beanClass
-        .leafClassPolymorphicInstances(
-            beanClass
-                .allNonInterfaceSuperclasses
-                .mapNotNull { it.companionObjectInstance as? Polymorphic }
-                .firstOrNull()
-        )
-        .fold(HashBasedTable.create<String, String, KClass<out T>>()) { table, it ->
+        .allNonInterfaceSuperclasses
+        .mapNotNull { it.companionObjectInstance as? Polymorphic }
+        .firstOrNull()
+        .let { beanClass.leafClassPolymorphicInstances(it) }
+        .fold(HashBasedTable.create<String, String, Pair<KClass<out T>, String?>>()) { table, it ->
           val (t, p) = it
 
           p?.apply {
-            table.put(typeKey, t.toTypeName, t)?.let {
+            table.put(typeKey, t.toTypeName, t to valueKey)?.let {
               throw IllegalArgumentException("Duplicate type names: $it and $t")
             }
           }

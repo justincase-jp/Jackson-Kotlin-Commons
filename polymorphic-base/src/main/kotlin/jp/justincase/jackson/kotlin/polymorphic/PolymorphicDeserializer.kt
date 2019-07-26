@@ -12,7 +12,7 @@ import kotlin.reflect.KClass
 internal
 class PolymorphicDeserializer<T : Any>(
     private
-    val typeTable: Map<String, Map<String, KClass<out T>>>,
+    val typeTable: Map<String, Map<String, Pair<KClass<out T>, String?>>>,
     private
     val rootClass: KClass<T>,
     private
@@ -53,27 +53,33 @@ class PolymorphicDeserializer<T : Any>(
     return if (!matches.hasNext()) {
       rootDelegate(node.traverse(p.codec), ctxt)
     } else {
-      val (k, t) = matches.next()
+      val (key, factory) = matches.next()
+      val (type, valueKey) = factory
 
       if (matches.hasNext()) {
         val message = matches
             .asSequence()
-            .joinToString(", ", "Duplicate type definitions ", "and {$k: $t}") { (k, t) ->
-              "{$k: $t}"
+            .joinToString(", ", "Duplicate type definitions ", "and {$key: $type}") { (k, f) ->
+              "{$k: ${f.first}}"
             }
 
         ctxt.reportInputMismatch(this, message)
       } else {
-        node.remove(k)
-        val traversal = node.traverse(p.codec)
+        val traversal = if (valueKey != null) {
+          node.get(valueKey).traverse(p.codec)
+        } else {
+          node.remove(key)
+
+          node.traverse(p.codec)
+        }
         traversal.nextToken()
 
-        if (t == rootClass) {
+        if (type == rootClass) {
           rootDelegate(traversal, ctxt)
         } else {
           val out = contextualType
               .toTypeToken()
-              .resolveType(t.java)
+              .resolveType(type.java)
               .toJavaType(ctxt.typeFactory)
               .let(ctxt::findNonContextualValueDeserializer)
               .deserialize(traversal, ctxt)
