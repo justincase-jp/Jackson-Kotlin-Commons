@@ -16,11 +16,10 @@ object PolymorphicDeserializerModifier : BeanDeserializerModifier() {
       beanDesc: BeanDescription,
       deserializer: JsonDeserializer<*>
   ): JsonDeserializer<*> =
-      modifyCovariantDeserializer(config, beanDesc, deserializer)
+      modifyCovariantDeserializer(beanDesc, deserializer)
 
   private
   fun <T : Any> modifyCovariantDeserializer(
-      config: DeserializationConfig,
       beanDesc: BeanDescription,
       deserializer: JsonDeserializer<out T>
   ): JsonDeserializer<out T> {

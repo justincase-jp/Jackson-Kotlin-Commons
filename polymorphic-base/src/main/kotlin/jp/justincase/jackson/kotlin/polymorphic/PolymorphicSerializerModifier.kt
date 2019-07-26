@@ -15,11 +15,10 @@ object PolymorphicSerializerModifier : BeanSerializerModifier() {
       beanDesc: BeanDescription,
       serializer: JsonSerializer<*>
   ): JsonSerializer<*> =
-      modifyContravariantSerializer(config, beanDesc, serializer)
+      modifyContravariantSerializer(beanDesc, serializer)
 
   private
   fun <T : Any> modifyContravariantSerializer(
-      config: SerializationConfig,
       beanDesc: BeanDescription,
       serializer: JsonSerializer<in T>
   ): JsonSerializer<in T> {
