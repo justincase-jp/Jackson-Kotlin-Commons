@@ -1,4 +1,5 @@
 plugins {
+  maven
   kotlin("jvm")
   `java-library`
 }
