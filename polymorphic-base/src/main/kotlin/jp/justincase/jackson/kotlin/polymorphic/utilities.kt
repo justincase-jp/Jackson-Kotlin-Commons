@@ -4,6 +4,7 @@ package jp.justincase.jackson.kotlin.polymorphic
 import com.fasterxml.jackson.databind.JavaType
 import com.fasterxml.jackson.databind.type.TypeFactory
 import com.google.common.reflect.TypeToken
+import java.lang.reflect.GenericArrayType
 import java.lang.reflect.ParameterizedType
 import java.lang.reflect.Type
 import kotlin.reflect.KClass
@@ -33,21 +34,44 @@ fun <T : Any> KClass<T>.leafClassPolymorphicInstances(root: Polymorphic?): Seque
     }
   }
 
+private
+fun JavaType.toType(): Type =
+    when {
+      bindings.isEmpty ->
+        rawClass
+      isArrayType ->
+        object : GenericArrayType {
+          override
+          fun getGenericComponentType(): Type? =
+              contentType.toType()
+
+          override
+          fun toString(): String =
+              this@toType.toCanonical()
+        }
+      else ->
+        object : ParameterizedType {
+          override
+          fun getRawType(): Type =
+              rawClass
+
+          override
+          fun getActualTypeArguments(): Array<Type> =
+              bindings.typeParameters.map { it.toType() }.toTypedArray()
+
+          override
+          fun getOwnerType(): Type? =
+              null
+
+          override
+          fun toString(): String =
+              this@toType.toCanonical()
+        }
+    }
+
 internal
 fun JavaType.toTypeToken() =
-    TypeToken.of(object : ParameterizedType {
-      override
-      fun getRawType(): Type =
-          rawClass
-
-      override
-      fun getActualTypeArguments(): Array<Type> =
-          bindings.typeParameters.toTypedArray()
-
-      override
-      fun getOwnerType(): Type? =
-          null
-    })
+    TypeToken.of(toType())
 
 internal
 fun TypeToken<*>.toJavaType(factory: TypeFactory) =
