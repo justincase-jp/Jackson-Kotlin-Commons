@@ -42,7 +42,7 @@ class PolymorphicDeserializer<T : Any>(
       for ((k, m) in typeTable) {
         val n = node.get(k)
 
-        if (n.isTextual) {
+        if (n?.isTextual == true) {
           m[n.textValue()!!]?.let {
             yield(k to it)
           }
