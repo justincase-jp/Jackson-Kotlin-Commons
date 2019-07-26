@@ -4,10 +4,9 @@ package jp.justincase.jackson.kotlin.polymorphic
 import com.fasterxml.jackson.databind.JavaType
 import com.fasterxml.jackson.databind.type.TypeFactory
 import com.google.common.reflect.TypeToken
-import java.lang.reflect.GenericArrayType
-import java.lang.reflect.ParameterizedType
-import java.lang.reflect.Type
+import java.lang.reflect.*
 import kotlin.reflect.KClass
+import kotlin.reflect.KVariance
 import kotlin.reflect.full.companionObjectInstance
 
 internal
@@ -34,6 +33,40 @@ fun <T : Any> KClass<T>.leafClassPolymorphicInstances(root: Polymorphic?): Seque
     }
   }
 
+
+private
+fun JavaType.toWildcardType(variance: KVariance): Type =
+    when (variance) {
+      KVariance.INVARIANT -> toType()
+      KVariance.IN -> object : WildcardType {
+        override
+        fun getUpperBounds(): Array<Type> =
+            emptyArray()
+
+        override
+        fun getLowerBounds(): Array<Type> =
+            arrayOf(toType())
+
+        override
+        fun toString(): String =
+            toCanonical()
+      }
+      KVariance.OUT -> object : WildcardType {
+        override
+        fun getUpperBounds(): Array<Type> =
+            arrayOf(toType())
+
+        override
+        fun getLowerBounds(): Array<Type> =
+            emptyArray()
+
+        override
+        fun toString(): String =
+            toCanonical()
+      }
+    }
+
+
 private
 fun JavaType.toType(): Type =
     when {
@@ -47,7 +80,7 @@ fun JavaType.toType(): Type =
 
           override
           fun toString(): String =
-              this@toType.toCanonical()
+              toCanonical()
         }
       else ->
         object : ParameterizedType {
@@ -57,7 +90,13 @@ fun JavaType.toType(): Type =
 
           override
           fun getActualTypeArguments(): Array<Type> =
-              bindings.typeParameters.map { it.toType() }.toTypedArray()
+              rawClass
+                  .kotlin
+                  .typeParameters
+                  .map { it.variance }
+                  .zip(bindings.typeParameters)
+                  .map { (v, p) -> p.toWildcardType(v) }
+                  .toTypedArray()
 
           override
           fun getOwnerType(): Type? =
@@ -65,7 +104,7 @@ fun JavaType.toType(): Type =
 
           override
           fun toString(): String =
-              this@toType.toCanonical()
+              toCanonical()
         }
     }
 
