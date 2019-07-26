@@ -28,8 +28,7 @@ object PolymorphicSerializerModifier : BeanSerializerModifier() {
     @Suppress("UNCHECKED_CAST")
     beanClass as KClass<T>
 
-    val modified = beanClass
-        .allNonInterfaceSuperclasses
+    val modified = (sequenceOf(beanClass) + beanClass.allNonInterfaceSuperclasses.takeWhile(KClass<in T>::isSealed))
         .mapNotNull { it.companionObjectInstance as? Polymorphic }
         .firstOrNull()
         ?.let {

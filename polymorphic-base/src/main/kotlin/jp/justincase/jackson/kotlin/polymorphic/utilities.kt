@@ -11,12 +11,10 @@ import kotlin.reflect.full.companionObjectInstance
 
 internal
 val <T : Any> KClass<T>.allNonInterfaceSuperclasses: Sequence<KClass<in T>>
-  get() = generateSequence<KClass<in T>>(this) {
-    val t: Class<*>? = it.java.superclass
-
+  get() = generateSequence<Class<*>>(java.superclass, Class<*>::getSuperclass).map {
     // Super classes share the same lower bound
     @Suppress("UNCHECKED_CAST")
-    t?.kotlin as? KClass<in T>
+    it.kotlin as KClass<in T>
   }
 
 internal
