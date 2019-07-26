@@ -1,6 +1,7 @@
 package jp.justincase.jackson.kotlin.polymorphic.test
 
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
+import com.fasterxml.jackson.module.kotlin.readValue
 import io.kotlintest.shouldBe
 import io.kotlintest.specs.StringSpec
 import jp.justincase.jackson.kotlin.polymorphic.Polymorphic
@@ -28,7 +29,12 @@ class PolymorphicModuleSpec : StringSpec({
       "prop2" to 1
   )
 
-  "writeValueAsString should output type name" {
-    mapper.writeValueAsString(impl) shouldBe mapper.writeValueAsString(map)
+  mapper.apply {
+    "`writeValueAsString` should output type name" {
+      writeValueAsString(impl) shouldBe writeValueAsString(map)
+    }
+    "Round trip should work" {
+      readValue<Base>(writeValueAsString(impl)) shouldBe impl
+    }
   }
 })
