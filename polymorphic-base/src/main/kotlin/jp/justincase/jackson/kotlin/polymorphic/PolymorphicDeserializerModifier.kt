@@ -29,7 +29,8 @@ object PolymorphicDeserializerModifier : BeanDeserializerModifier() {
     @Suppress("UNCHECKED_CAST")
     beanClass as KClass<T>
 
-    val typeTable = (sequenceOf(beanClass) + beanClass.allNonInterfaceSuperclasses.takeWhile(KClass<in T>::isSealed))
+    val typeTable = beanClass
+        .allNonInterfaceSuperclasses
         .mapNotNull { it.companionObjectInstance as? Polymorphic }
         .firstOrNull()
         .let { beanClass.leafClassPolymorphicInstances(it) }

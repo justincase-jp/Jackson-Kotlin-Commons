@@ -10,8 +10,8 @@ import kotlin.reflect.KVariance
 import kotlin.reflect.full.companionObjectInstance
 
 internal
-val <T : Any> KClass<T>.allNonInterfaceSuperclasses: Sequence<KClass<in T>>
-  get() = generateSequence<Class<*>>(java.superclass, Class<*>::getSuperclass).map {
+val <T : Any> KClass<in T>.allNonInterfaceSuperclasses: Sequence<KClass<in T>>
+  get() = generateSequence<Class<*>>(java, Class<*>::getSuperclass).map {
     // Super classes share the same lower bound
     @Suppress("UNCHECKED_CAST")
     it.kotlin as KClass<in T>

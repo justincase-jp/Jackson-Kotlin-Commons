@@ -28,14 +28,32 @@ object PolymorphicSerializerModifier : BeanSerializerModifier() {
     @Suppress("UNCHECKED_CAST")
     beanClass as KClass<T>
 
-    val modified = (sequenceOf(beanClass) + beanClass.allNonInterfaceSuperclasses.takeWhile(KClass<in T>::isSealed))
-        .mapNotNull { it.companionObjectInstance as? Polymorphic }
-        .firstOrNull()
-        ?.let {
-          if (it.valueKey == null) {
-            PolymorphicSerializer(it, serializer.unwrappingSerializer(null)::serialize)
-          } else {
-            PolymorphicWrappedSerializer(it, serializer::serialize)
+    val modified = beanClass
+        .allNonInterfaceSuperclasses
+        .zipWithNext()
+        .firstOrNull { (_, t) -> t.isSealed }
+        ?.let { (type, _) ->
+          type
+              .allNonInterfaceSuperclasses
+              .mapNotNull { it.companionObjectInstance as? Polymorphic }
+              .firstOrNull()
+              ?.let { type to it }
+        }
+        ?.let { (type, p) ->
+          p.run {
+            when (val valueKey = valueKey) {
+              null -> PolymorphicSerializer(
+                  typeKey,
+                  type.toTypeName,
+                  serializer.unwrappingSerializer(null)::serialize
+              )
+              else -> PolymorphicWrappedSerializer(
+                  typeKey,
+                  type.toTypeName,
+                  valueKey,
+                  serializer::serialize
+              )
+            }
           }
         }
 

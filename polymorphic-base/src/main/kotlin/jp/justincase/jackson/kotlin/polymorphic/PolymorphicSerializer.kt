@@ -6,20 +6,15 @@ import com.fasterxml.jackson.databind.SerializerProvider
 
 internal
 class PolymorphicSerializer<T : Any>(
-    private
-    val polymorphic: Polymorphic,
-    private
-    val unwrappedDelegate: (T, JsonGenerator, SerializerProvider) -> Unit
+    private val typeKey: String,
+    private val typeName: String,
+    private val unwrappedDelegate: (T, JsonGenerator, SerializerProvider) -> Unit
 ) : JsonSerializer<T>() {
   override
   fun serialize(value: T, gen: JsonGenerator, serializers: SerializerProvider) {
     gen.writeStartObject()
-
-    polymorphic.apply {
-      gen.writeStringField(typeKey, value::class.toTypeName)
-    }
+    gen.writeStringField(typeKey, typeName)
     unwrappedDelegate(value, gen, serializers)
-
     gen.writeEndObject()
   }
 }
