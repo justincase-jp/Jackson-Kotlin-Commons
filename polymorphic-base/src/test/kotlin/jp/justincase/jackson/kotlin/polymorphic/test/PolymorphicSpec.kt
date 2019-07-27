@@ -28,6 +28,12 @@ sealed class WrappedBase {
   ) : WrappedBase()
 }
 
+sealed class ObjectBase {
+  companion object : Polymorphic
+
+  object Impl : ObjectBase()
+}
+
 sealed class NonPolymorphicBase {
   data class Impl(
       val prop1: String,
@@ -77,6 +83,20 @@ class PolymorphicSpec : WordSpec({
       }
       "work with Round trip" {
         readValue<WrappedBase>(writeValueAsString(impl)) shouldBe impl
+      }
+    }
+
+    "Polymorphic object type" should {
+      val impl = ObjectBase.Impl
+      val map = mapOf(
+          "type" to "Impl"
+      )
+
+      "output type name in `writeValueAsString`" {
+        writeValueAsString(impl) shouldBe writeValueAsString(map)
+      }
+      "work with round trip" {
+        readValue<ObjectBase>(writeValueAsString(impl)) shouldBe impl
       }
     }
 
