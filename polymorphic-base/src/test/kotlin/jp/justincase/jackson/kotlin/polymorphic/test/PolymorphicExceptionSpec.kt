@@ -1,6 +1,7 @@
 package jp.justincase.jackson.kotlin.polymorphic.test
 
 import com.fasterxml.jackson.databind.JsonMappingException
+import com.fasterxml.jackson.databind.exc.MismatchedInputException
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
 import io.kotlintest.shouldBe
@@ -24,17 +25,37 @@ sealed class IllegalTypeNameBase {
 }
 
 sealed class DuplicateTypeNameBase {
-  companion object : Polymorphic {
+  companion object : Polymorphic
+
+  data class Impl(
+      val prop1: String,
+      val prop2: Int
+  ) : DuplicateTypeNameBase() {
+    @Suppress("unused")
     data class Impl(
         val prop1: String,
         val prop2: Int
     ) : DuplicateTypeNameBase()
   }
+}
+
+sealed class AmbiguousMappingBase {
+  companion object : Polymorphic
 
   data class Impl(
       val prop1: String,
       val prop2: Int
-  ) : DuplicateTypeNameBase()
+  ) : AmbiguousMappingBase()
+
+  data class Impl1(
+      val prop1: String,
+      val prop2: Int
+  ) : AmbiguousMappingBase() {
+    companion object : Polymorphic {
+      override val typeKey: String
+        get() = "type1"
+    }
+  }
 }
 
 
@@ -77,6 +98,19 @@ class PolymorphicExceptionSpec : WordSpec({
       "throw `JsonMappingException` with round trip" {
         shouldThrow<JsonMappingException> {
           readValue<DuplicateTypeNameBase>(writeValueAsString(impl))
+        }
+      }
+    }
+
+    "Polymorphic type that has ambiguous mapping" should {
+      val map = mapOf(
+          "type" to "Impl",
+          "type1" to "Impl1"
+      )
+
+      "throw `MismatchedInputException` with the ambiguous mapping" {
+        shouldThrow<MismatchedInputException> {
+          readValue<AmbiguousMappingBase>(writeValueAsString(map))
         }
       }
     }
