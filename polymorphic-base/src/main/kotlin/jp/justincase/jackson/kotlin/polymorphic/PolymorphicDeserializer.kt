@@ -43,7 +43,9 @@ class PolymorphicDeserializer<T : Any>(
         val n = node.get(k)
 
         if (n?.isTextual == true) {
-          m[n.textValue()!!]?.let {
+          val text = n.textValue()!! // What if a broken `JsonNode` is used?
+
+          m[text]?.let {
             yield(k to it)
           }
         }
