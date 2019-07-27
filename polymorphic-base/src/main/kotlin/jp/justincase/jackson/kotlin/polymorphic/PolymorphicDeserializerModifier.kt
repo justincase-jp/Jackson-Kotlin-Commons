@@ -39,7 +39,7 @@ object PolymorphicDeserializerModifier : BeanDeserializerModifier() {
 
           p?.apply {
             table.put(typeKey, t.toTypeName, t to valueKey)?.let {
-              throw IllegalArgumentException("Duplicate type names: $it and $t")
+              throw IllegalArgumentException("Duplicate type names: ${it.first} and $t")
             }
           }
           table
