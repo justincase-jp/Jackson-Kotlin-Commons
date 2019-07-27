@@ -17,7 +17,7 @@ sealed class GenericBase<T> {
 }
 
 
-class PolymorphicModuleGenericSpec : WordSpec({
+class PolymorphicGenericsSpec : WordSpec({
   val mapper = jacksonObjectMapper().registerModule(PolymorphicModule())
 
   mapper.apply {

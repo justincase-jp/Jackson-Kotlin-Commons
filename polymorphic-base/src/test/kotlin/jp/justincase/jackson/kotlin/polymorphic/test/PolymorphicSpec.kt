@@ -36,7 +36,7 @@ sealed class NonPolymorphicBase {
 }
 
 
-class PolymorphicModuleSpec : WordSpec({
+class PolymorphicSpec : WordSpec({
   val mapper = jacksonObjectMapper().registerModule(PolymorphicModule())
 
   mapper.apply {
