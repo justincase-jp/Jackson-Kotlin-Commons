@@ -81,8 +81,11 @@ class PolymorphicDeserializer<T : Any>(
               .toTypeToken()
               .getSubtype(type.java)
               .toJavaType(ctxt.typeFactory)
-              .let(ctxt::findNonContextualValueDeserializer)
-              .deserialize(traversal, ctxt)
+              .let {
+                it.rawClass.kotlin.objectInstance ?: ctxt
+                    .findNonContextualValueDeserializer(it)
+                    .deserialize(traversal, ctxt)
+              }
 
           // Deserialization as a subtype of the contextual type
           @Suppress("UNCHECKED_CAST")
