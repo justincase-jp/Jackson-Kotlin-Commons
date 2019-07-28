@@ -18,12 +18,17 @@ object None : Option<Nothing>() {
   override fun toString() = "None"
 }
 
+
+data class Foo(val bar: Boolean)
+
 fun main() {
   val mapper = jacksonObjectMapper().registerModule(PolymorphicModule())
 
   println(mapper.writeValueAsString(Some(30))) // {"type":"Some","value":30}
+  println(mapper.writeValueAsString(Some(Foo(true)))) // {"type":"Some","value":{"bar":true}}
   println(mapper.writeValueAsString(None)) // {"type":"None"}
   println(mapper.readValue<Option<String>>("""{"type":"Some","value":"abc"}""")) // Some(value=abc)
+  println(mapper.readValue<Option<Foo>>("""{"type":"Some","value":{"bar":true}}""")) // Some(value=Foo(bar=true))
   println(mapper.readValue<Option<String>>("""{"type":"None"}""")) // None
 }
 
@@ -38,12 +43,18 @@ class ExampleSpec : StringSpec({
     mapper.writeValueAsString(Some(30)) shouldBe """{"type":"Some","value":30}"""
   }
   "Example output 2 should match the comment" {
-    mapper.writeValueAsString(None) shouldBe """{"type":"None"}"""
+    mapper.writeValueAsString(Some(Foo(true))) shouldBe """{"type":"Some","value":{"bar":true}}"""
   }
   "Example output 3 should match the comment" {
-    mapper.readValue<Option<String>>("""{"type":"Some","value":"abc"}""").toString() shouldBe """Some(value=abc)"""
+    mapper.writeValueAsString(None) shouldBe """{"type":"None"}"""
   }
   "Example output 4 should match the comment" {
+    mapper.readValue<Option<String>>("""{"type":"Some","value":"abc"}""").toString() shouldBe """Some(value=abc)"""
+  }
+  "Example output 5 should match the comment" {
+    mapper.readValue<Option<Foo>>("""{"type":"Some","value":{"bar":true}}""").toString() shouldBe """Some(value=Foo(bar=true))"""
+  }
+  "Example output 6 should match the comment" {
     mapper.readValue<Option<String>>("""{"type":"None"}""").toString() shouldBe """None"""
   }
 })
