@@ -19,3 +19,10 @@ jobs:
       - save_cache:
           key: gradle-DFAHLD-{{ checksum ".gradle-cache-key" }}
           paths: ~/.gradle
+      - run:
+          command: |
+            mkdir -p test-results/junit
+            find */build/test-results/test/*.xml -type f -exec cp {} test-results/junit \;
+          when: always
+      - store_test_results:
+          path: test-results
