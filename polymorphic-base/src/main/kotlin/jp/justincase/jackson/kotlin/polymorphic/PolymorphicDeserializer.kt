@@ -7,6 +7,7 @@ import com.fasterxml.jackson.databind.JavaType
 import com.fasterxml.jackson.databind.JsonDeserializer
 import com.fasterxml.jackson.databind.deser.ContextualDeserializer
 import com.fasterxml.jackson.databind.node.ObjectNode
+import java.lang.IllegalArgumentException
 import kotlin.reflect.KClass
 
 internal
@@ -65,7 +66,7 @@ class PolymorphicDeserializer<T : Any>(
               "{$k: ${f.first}}"
             }
 
-        ctxt.reportInputMismatch(this, message)
+        throw reportInputMismatch(ctxt, message)
       } else {
         val traversal = if (valueKey != null) {
           node.get(valueKey).traverse(p.codec)
@@ -81,7 +82,13 @@ class PolymorphicDeserializer<T : Any>(
         } else {
           val out = contextualType
               .toTypeToken()
-              .getSubtype(type.java)
+              .let {
+                try {
+                  it.getSubtype(type.java)
+                } catch (e: IllegalArgumentException) {
+                  throw reportInputMismatch(ctxt, "$type is not a subtype of $it: $e")
+                }
+              }
               .toJavaType(ctxt.typeFactory)
               .let {
                 it.rawClass.kotlin.objectInstance ?: ctxt
