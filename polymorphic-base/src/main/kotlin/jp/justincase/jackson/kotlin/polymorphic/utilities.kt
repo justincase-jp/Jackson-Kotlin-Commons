@@ -91,9 +91,9 @@ fun JavaType.toType(): Type =
               rawClass
                   .kotlin
                   .typeParameters
-                  .map { it.variance }
-                  .zip(bindings.typeParameters)
-                  .map { (v, p) -> p.toWildcardType(v) }
+                  .zip(bindings.typeParameters) { baseType, bindingType ->
+                    bindingType.toWildcardType(baseType.variance)
+                  }
                   .toTypedArray()
 
           override
