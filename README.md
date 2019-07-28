@@ -7,3 +7,41 @@
 
 Jackson Kotlin Commons
 ===
+Pluggable Kotlin utilities for JSON serialization with Jackson.
+
+## Polymorphic
+Sealed-class based polymorphic type serialization.
+
+#### Usage
+
+```kotlin
+sealed class Option<out T> {
+  companion object : Polymorphic
+}
+
+data class Some<out T>(
+  val value: T
+) : Option<T>()
+
+object None : Option<Nothing>()
+
+fun main() {
+  val mapper = jacksonObjectMapper().registerModule(PolymorphicModule())
+
+  println(mapper.writeValueAsString(Some(30))) // {"type":"Some","value":30}
+  println(mapper.writeValueAsString(None)) // {"type":"None"}
+  println(mapper.readValue<Option<String>>("""{"type":"Some","value":"abc"}""")) // Some(value=abc)
+  println(mapper.readValue<Option<String>>("""{"type":"None"}""")) // None
+}
+```
+
+#### Installation
+
+```kotlin
+repositories {
+  maven("https://jitpack.io")
+}
+dependencies {
+  implementation("io.github.justincase-jp:jackson-kotlin-commons:$VERSION")
+}
+```
