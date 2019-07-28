@@ -59,7 +59,7 @@ sealed class AmbiguousMappingBase {
 }
 
 
-class PolymorphicExceptionSpec : WordSpec({
+class PolymorphicTypeNameSpec : WordSpec({
   val mapper = jacksonObjectMapper().registerModule(PolymorphicModule())
 
   mapper.apply {
