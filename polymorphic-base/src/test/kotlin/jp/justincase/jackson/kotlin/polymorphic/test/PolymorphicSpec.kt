@@ -1,8 +1,10 @@
 package jp.justincase.jackson.kotlin.polymorphic.test
 
+import com.fasterxml.jackson.databind.exc.MismatchedInputException
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
 import io.kotlintest.shouldBe
+import io.kotlintest.shouldThrow
 import io.kotlintest.specs.WordSpec
 import jp.justincase.jackson.kotlin.polymorphic.Polymorphic
 import jp.justincase.jackson.kotlin.polymorphic.PolymorphicModule
@@ -28,10 +30,10 @@ sealed class WrappedBase {
   ) : WrappedBase()
 }
 
-sealed class ObjectBase {
+sealed class ObjectBase<T> {
   companion object : Polymorphic
 
-  object Impl : ObjectBase()
+  object Impl : ObjectBase<String>()
 }
 
 sealed class NonPolymorphicBase {
@@ -96,7 +98,12 @@ class PolymorphicSpec : WordSpec({
         writeValueAsString(impl) shouldBe writeValueAsString(map)
       }
       "work with round trip" {
-        readValue<ObjectBase>(writeValueAsString(impl)) shouldBe impl
+        readValue<ObjectBase<String>>(writeValueAsString(impl)) shouldBe impl
+      }
+      "throw `MismatchedInputException` if incompatible type parameter is used in `readValue`" {
+        shouldThrow<MismatchedInputException> {
+          readValue<ObjectBase<Int>>(writeValueAsString(impl))
+        }
       }
     }
 
