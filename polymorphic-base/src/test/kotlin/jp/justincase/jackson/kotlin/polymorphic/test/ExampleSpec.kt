@@ -9,7 +9,7 @@ import jp.justincase.jackson.kotlin.polymorphic.Polymorphic
 import jp.justincase.jackson.kotlin.polymorphic.PolymorphicModule
 
 sealed class Option<out T> {
-  companion object : Polymorphic
+  companion object : Polymorphic // Implement `Polymorphic` to handle this as a polymorphic type
 }
 
 data class Some<out T>(val value: T) : Option<T>()

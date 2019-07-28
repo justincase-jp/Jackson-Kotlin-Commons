@@ -12,11 +12,11 @@ Pluggable Kotlin utilities for JSON serialization with Jackson.
 ## Polymorphic
 Sealed-class based polymorphic type serialization.
 
-#### Usage
+#### Basic usage
 
 ```kotlin
 sealed class Option<out T> {
-  companion object : Polymorphic
+  companion object : Polymorphic // Implement `Polymorphic` to handle this as a polymorphic type
 }
 
 data class Some<out T>(val value: T) : Option<T>()
