@@ -1,0 +1,20 @@
+version: 2.1
+
+jobs:
+  # Test
+  build:
+    docker:
+      - image: adoptopenjdk/openjdk8:jdk8u222-b10-alpine-slim
+    steps:
+      - checkout
+      - run: |
+          cat */build.gradle.kts > .gradle-cache-key
+      - restore_cache:
+          keys:
+            - gradle-DFAHLD-{{ checksum ".gradle-cache-key" }}
+            - gradle-DFAHLD-
+      - run: |
+          ./gradlew test
+      - save_cache:
+          key: gradle-DFAHLD-{{ checksum ".gradle-cache-key" }}
+          paths: ~/.gradle
