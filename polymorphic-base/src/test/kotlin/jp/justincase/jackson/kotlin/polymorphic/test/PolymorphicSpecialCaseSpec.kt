@@ -27,6 +27,19 @@ sealed class LeakingBase {
   ) : Impl()
 }
 
+sealed class DisconnectedBaseBase {
+  companion object : Polymorphic
+
+  abstract class BaseImpl : DisconnectedBaseBase()
+
+  sealed class DisconnectedBase : BaseImpl() {
+    data class Impl(
+        val prop1: String,
+        val prop2: Int
+    ) : DisconnectedBase()
+  }
+}
+
 
 class PolymorphicSpecialCaseSpec : WordSpec({
   val mapper = jacksonObjectMapper().registerModule(PolymorphicModule())
@@ -67,6 +80,30 @@ class PolymorphicSpecialCaseSpec : WordSpec({
       "throw `InvalidDefinitionException` during deserialization" {
         shouldThrow<InvalidDefinitionException> {
           readValue<LeakingBase>(writeValueAsString(impl))
+        }
+      }
+    }
+
+    "Disconnected polymorphic type" should {
+      val impl = DisconnectedBaseBase.DisconnectedBase.Impl(
+          prop1 = "a",
+          prop2 = 1
+      )
+      val map = mapOf(
+          "type" to "Impl",
+          "prop1" to "a",
+          "prop2" to 1
+      )
+
+      "output type name in `writeValueAsString`" {
+        writeValueAsString(impl) shouldBe writeValueAsString(map)
+      }
+      "work with round trip" {
+        readValue<DisconnectedBaseBase.DisconnectedBase>(writeValueAsString(impl)) shouldBe impl
+      }
+      "throw `InvalidDefinitionException` during deserialization as disconnected parent type" {
+        shouldThrow<InvalidDefinitionException> {
+          readValue<DisconnectedBaseBase>(writeValueAsString(impl))
         }
       }
     }
