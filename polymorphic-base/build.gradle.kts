@@ -4,6 +4,11 @@ plugins {
   `java-library`
 }
 
+tasks.getByName("test", Test::class) {
+  @Suppress("UnstableApiUsage")
+  useJUnitPlatform()
+}
+
 dependencies {
   implementation(kotlin("stdlib"))
   implementation(kotlin("reflect"))
