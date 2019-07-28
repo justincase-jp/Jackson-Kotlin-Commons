@@ -1,6 +1,7 @@
 package jp.justincase.jackson.kotlin.polymorphic.test
 
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
+import com.fasterxml.jackson.module.kotlin.readValue
 import io.kotlintest.shouldBe
 import io.kotlintest.specs.StringSpec
 import jp.justincase.jackson.kotlin.polymorphic.Polymorphic
@@ -24,7 +25,7 @@ fun main() {
   val mapper = jacksonObjectMapper().registerModule(PolymorphicModule())
 
   println(mapper.writeValueAsString(User("A"))) // {"role":"user","id":"A"}
-  println(mapper.writeValueAsString(Admin("B"))) // {"role":"admin","id":"B"}
+  println(mapper.readValue<Identity>("""{"role":"admin","id":"B"}""")) // Admin(id=B)
 }
 
 class CustomTypeKeyExampleSpec : StringSpec({
@@ -37,6 +38,6 @@ class CustomTypeKeyExampleSpec : StringSpec({
     mapper.writeValueAsString(User("A")) shouldBe """{"role":"user","id":"A"}"""
   }
   "Example output 2 should match the comment" {
-    mapper.writeValueAsString(Admin("B")) shouldBe """{"role":"admin","id":"B"}"""
+    mapper.readValue<Identity>("""{"role":"admin","id":"B"}""").toString() shouldBe """Admin(id=B)"""
   }
 })

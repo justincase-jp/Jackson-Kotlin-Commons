@@ -75,6 +75,6 @@ fun main() {
   val mapper = jacksonObjectMapper().registerModule(PolymorphicModule())
 
   println(mapper.writeValueAsString(User("A"))) // {"role":"user","id":"A"}
-  println(mapper.writeValueAsString(Admin("B"))) // {"role":"admin","id":"B"}
+  println(mapper.readValue<Identity>("""{"role":"admin","id":"B"}""")) // Admin(id=B)
 }
 ```
