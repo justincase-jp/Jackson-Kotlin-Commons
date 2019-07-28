@@ -56,12 +56,15 @@ dependencies {
 
 ### Customization
 
-##### Custom type key
+##### Custom type name
 
 ```kotlin
 sealed class Identity {
   companion object : Polymorphic {
     override val typeKey = "role"
+
+    override val KClass<out Any>.toTypeName
+      get() = simpleName?.toLowerCase() ?: throw IllegalArgumentException(toString())
   }
 }
 
@@ -71,7 +74,7 @@ data class Admin(val id: String) : Identity()
 fun main() {
   val mapper = jacksonObjectMapper().registerModule(PolymorphicModule())
 
-  println(mapper.writeValueAsString(User("A"))) // {"role":"User","id":"A"}
-  println(mapper.writeValueAsString(Admin("B"))) // {"role":"Admin","id":"B"}
+  println(mapper.writeValueAsString(User("A"))) // {"role":"user","id":"A"}
+  println(mapper.writeValueAsString(Admin("B"))) // {"role":"admin","id":"B"}
 }
 ```
