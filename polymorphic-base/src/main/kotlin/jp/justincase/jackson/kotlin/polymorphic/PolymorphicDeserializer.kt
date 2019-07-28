@@ -1,12 +1,14 @@
 package jp.justincase.jackson.kotlin.polymorphic
 
 import com.fasterxml.jackson.core.JsonParser
+import com.fasterxml.jackson.core.TreeNode
 import com.fasterxml.jackson.databind.BeanProperty
 import com.fasterxml.jackson.databind.DeserializationContext
 import com.fasterxml.jackson.databind.JavaType
 import com.fasterxml.jackson.databind.JsonDeserializer
 import com.fasterxml.jackson.databind.deser.ContextualDeserializer
 import com.fasterxml.jackson.databind.node.ObjectNode
+import com.fasterxml.jackson.databind.node.TextNode
 import java.lang.IllegalArgumentException
 import kotlin.reflect.KClass
 
@@ -37,18 +39,14 @@ class PolymorphicDeserializer<T : Any>(
 
   private
   fun typedDeserialize(p: JsonParser, ctxt: DeserializationContext, contextualType: JavaType): T {
-    val node = p.readValueAsTree<ObjectNode>()
+    val node = p.readValueAsTree<TreeNode>().let {
+      it as? ObjectNode ?: throw reportInputMismatch(ctxt, "${it::class} is not a JSON object representation")
+    }
 
     val matches = iterator {
       for ((k, m) in typeTable) {
-        val n = node.get(k)
-
-        if (n?.isTextual == true) {
-          val text = n.textValue()!! // What if a broken `JsonNode` is used?
-
-          m[text]?.let {
-            yield(k to it)
-          }
+        (node[k] as? TextNode)?.asText()?.let(m::get)?.let {
+          yield(k to it)
         }
       }
     }

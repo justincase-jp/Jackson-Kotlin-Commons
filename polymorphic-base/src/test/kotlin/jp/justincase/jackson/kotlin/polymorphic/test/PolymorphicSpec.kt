@@ -65,6 +65,11 @@ class PolymorphicSpec : WordSpec({
       "work with round trip" {
         readValue<Base>(writeValueAsString(impl)) shouldBe impl
       }
+      "throw `MismatchedInputException` for reading value with non-object" {
+        shouldThrow<MismatchedInputException> {
+          readValue<Base>(writeValueAsString(listOf("a")))
+        }
+      }
     }
 
     "Wrapped polymorphic type" should {
