@@ -43,12 +43,14 @@ fun main() {
 
 ### Installation
 
+Gradle Kotlin DSL
+
 ```kotlin
 repositories {
   maven("https://jitpack.io")
 }
 dependencies {
-  implementation("io.github.justincase-jp:jackson-kotlin-commons:$VERSION")
+  implementation("io.github.justincase-jp.jackson-kotlin-commons", "polymorphic", VERSION)
 }
 ```
 
