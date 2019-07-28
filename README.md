@@ -12,7 +12,7 @@ Pluggable Kotlin utilities for JSON serialization with Jackson.
 ## Polymorphic
 Sealed-class based polymorphic type serialization.
 
-#### Basic usage
+### Basic usage
 
 ```kotlin
 sealed class Option<out T> {
@@ -34,13 +34,14 @@ fun main() {
   println(mapper.writeValueAsString(Some(30))) // {"type":"Some","value":30}
   println(mapper.writeValueAsString(Some(Foo(true)))) // {"type":"Some","value":{"bar":true}}
   println(mapper.writeValueAsString(None)) // {"type":"None"}
+
   println(mapper.readValue<Option<String>>("""{"type":"Some","value":"abc"}""")) // Some(value=abc)
   println(mapper.readValue<Option<Foo>>("""{"type":"Some","value":{"bar":true}}""")) // Some(value=Foo(bar=true))
   println(mapper.readValue<Option<String>>("""{"type":"None"}""")) // None
 }
 ```
 
-#### Installation
+### Installation
 
 ```kotlin
 repositories {
@@ -48,5 +49,27 @@ repositories {
 }
 dependencies {
   implementation("io.github.justincase-jp:jackson-kotlin-commons:$VERSION")
+}
+```
+
+### Customization
+
+##### Custom type key
+
+```kotlin
+sealed class Identity {
+  companion object : Polymorphic {
+    override val typeKey = "role"
+  }
+}
+
+data class User(val id: String) : Identity()
+data class Admin(val id: String) : Identity()
+
+fun main() {
+  val mapper = jacksonObjectMapper().registerModule(PolymorphicModule())
+
+  println(mapper.writeValueAsString(User("A"))) // {"role":"User","id":"A"}
+  println(mapper.writeValueAsString(Admin("B"))) // {"role":"Admin","id":"B"}
 }
 ```

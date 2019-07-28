@@ -21,12 +21,14 @@ object None : Option<Nothing>() {
 
 data class Foo(val bar: Boolean)
 
+private
 fun main() {
   val mapper = jacksonObjectMapper().registerModule(PolymorphicModule())
 
   println(mapper.writeValueAsString(Some(30))) // {"type":"Some","value":30}
   println(mapper.writeValueAsString(Some(Foo(true)))) // {"type":"Some","value":{"bar":true}}
   println(mapper.writeValueAsString(None)) // {"type":"None"}
+
   println(mapper.readValue<Option<String>>("""{"type":"Some","value":"abc"}""")) // Some(value=abc)
   println(mapper.readValue<Option<Foo>>("""{"type":"Some","value":{"bar":true}}""")) // Some(value=Foo(bar=true))
   println(mapper.readValue<Option<String>>("""{"type":"None"}""")) // None
