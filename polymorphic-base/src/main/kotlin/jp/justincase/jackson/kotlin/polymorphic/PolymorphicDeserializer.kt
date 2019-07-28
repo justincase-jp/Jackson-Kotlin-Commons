@@ -9,6 +9,7 @@ import com.fasterxml.jackson.databind.JsonDeserializer
 import com.fasterxml.jackson.databind.deser.ContextualDeserializer
 import com.fasterxml.jackson.databind.node.ObjectNode
 import com.fasterxml.jackson.databind.node.TextNode
+import com.google.common.reflect.TypeToken
 import java.lang.IllegalArgumentException
 import kotlin.reflect.KClass
 
@@ -84,7 +85,13 @@ class PolymorphicDeserializer<T : Any>(
                 try {
                   it.getSubtype(type.java)
                 } catch (e: IllegalArgumentException) {
-                  throw reportInputMismatch(ctxt, "$type is not a subtype of $it: $e")
+                  try {
+                    // Work around '%s does not appear to be a subtype of %s' during TypeToken#getSubtype
+                    @Suppress("UnstableApiUsage")
+                    TypeToken.of(it.resolveTypeArgsForSubclass(type.java))
+                  } catch (_: IllegalArgumentException) {
+                    throw reportInputMismatch(ctxt, "$type is not a subtype of $it: $e")
+                  }
                 }
               }
               .toJavaType(ctxt.typeFactory)
