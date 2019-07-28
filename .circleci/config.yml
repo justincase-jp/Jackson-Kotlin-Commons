@@ -8,6 +8,7 @@ jobs:
     steps:
       - checkout
       - run: |
+          apk add --no-cache ca-certificates
           cat */build.gradle.kts > .gradle-cache-key
       - restore_cache:
           keys:
