@@ -12,11 +12,11 @@ sealed class Option<out T> {
   companion object : Polymorphic
 }
 
-data class Some<out T>(
-    val value: T
-) : Option<T>()
+data class Some<out T>(val value: T) : Option<T>()
 
-object None : Option<Nothing>()
+object None : Option<Nothing>() {
+  override fun toString() = "None"
+}
 
 fun main() {
   val mapper = jacksonObjectMapper().registerModule(PolymorphicModule())
