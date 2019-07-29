@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonParser
 import com.fasterxml.jackson.core.TreeNode
 import com.fasterxml.jackson.databind.DeserializationContext
 import com.fasterxml.jackson.databind.JsonDeserializer
+import com.fasterxml.jackson.databind.deser.ResolvableDeserializer
 import com.fasterxml.jackson.databind.node.ObjectNode
 import com.fasterxml.jackson.databind.node.TextNode
 
@@ -12,8 +13,12 @@ class PolymorphicDirectDeserializer<T : Any>(
     private val typeKey: String,
     private val typeName: String,
     private val valueKey: String?,
-    private val delegate: (JsonParser, DeserializationContext) -> T
-) : JsonDeserializer<T>() {
+    private val delegate: (JsonParser, DeserializationContext) -> T,
+    private val delegateResolution: (DeserializationContext) -> Unit
+) : ResolvableDeserializer, JsonDeserializer<T>() {
+  override
+  fun resolve(ctxt: DeserializationContext) = delegateResolution(ctxt)
+
   override
   fun deserialize(p: JsonParser, ctxt: DeserializationContext): T {
     val node = p.readValueAsTree<TreeNode>().let {

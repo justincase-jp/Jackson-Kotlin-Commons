@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.BeanDescription
 import com.fasterxml.jackson.databind.DeserializationConfig
 import com.fasterxml.jackson.databind.JsonDeserializer
 import com.fasterxml.jackson.databind.deser.BeanDeserializerModifier
+import com.fasterxml.jackson.databind.deser.ResolvableDeserializer
 import com.google.common.collect.HashBasedTable
 import kotlin.reflect.KClass
 import kotlin.reflect.full.companionObjectInstance
@@ -58,7 +59,14 @@ object PolymorphicDeserializerModifier : BeanDeserializerModifier() {
             typeKey,
             beanClass.toTypeName,
             valueKey,
-            deserializer::deserialize
+            deserializer::deserialize,
+            if (deserializer is ResolvableDeserializer) {
+              val resolvable: ResolvableDeserializer = deserializer
+
+              { resolvable.resolve(it) } // Aid type inference by using lambda
+            } else {
+              constant(Unit)
+            }
         )
       }
       wrapper ?: deserializer
