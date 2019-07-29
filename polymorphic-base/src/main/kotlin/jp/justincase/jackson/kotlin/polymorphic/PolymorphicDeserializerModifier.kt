@@ -40,7 +40,7 @@ object PolymorphicDeserializerModifier : BeanDeserializerModifier() {
           val (t, p) = it
 
           p?.apply {
-            table.put(typeKey, t.toTypeName, t to valueKey)?.let {
+            table.put(typeKey, t.typeName, t to valueKey)?.let {
               throw IllegalArgumentException("Duplicate type names: ${it.first} and $t")
             }
           }
@@ -59,7 +59,7 @@ object PolymorphicDeserializerModifier : BeanDeserializerModifier() {
           ?.run {
             PolymorphicDirectDeserializer(
                 typeKey,
-                beanClass.toTypeName,
+                beanClass.typeName,
                 valueKey,
                 deserializer::deserialize,
                 if (deserializer is ResolvableDeserializer) {

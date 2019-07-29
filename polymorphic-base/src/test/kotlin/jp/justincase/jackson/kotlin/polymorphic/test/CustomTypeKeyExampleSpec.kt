@@ -12,7 +12,7 @@ sealed class Identity {
   companion object : Polymorphic {
     override val typeKey = "role"
 
-    override val KClass<out Any>.toTypeName
+    override val KClass<out Any>.typeName
       get() = simpleName?.toLowerCase() ?: throw IllegalArgumentException(toString())
   }
 }

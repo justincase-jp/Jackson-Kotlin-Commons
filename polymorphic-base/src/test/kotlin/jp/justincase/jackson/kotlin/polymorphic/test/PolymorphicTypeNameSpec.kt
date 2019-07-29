@@ -14,7 +14,7 @@ import kotlin.reflect.KClass
 sealed class IllegalTypeNameBase {
   companion object : Polymorphic {
     override
-    val KClass<out Any>.toTypeName: String
+    val KClass<out Any>.typeName: String
       get() = throw IllegalArgumentException(toString())
   }
 

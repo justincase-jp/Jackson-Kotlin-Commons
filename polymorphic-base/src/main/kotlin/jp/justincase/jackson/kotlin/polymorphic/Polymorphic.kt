@@ -9,6 +9,6 @@ interface Polymorphic {
   val valueKey: String?
     get() = null
 
-  val KClass<out Any>.toTypeName: String
+  val KClass<out Any>.typeName: String
     get() = simpleName ?: throw IllegalArgumentException(toString())
 }

@@ -44,12 +44,12 @@ object PolymorphicSerializerModifier : BeanSerializerModifier() {
             when (val valueKey = valueKey) {
               null -> PolymorphicSerializer(
                   typeKey,
-                  type.toTypeName,
+                  type.typeName,
                   serializer.unwrappingSerializer(null)::serialize
               )
               else -> PolymorphicWrappedSerializer(
                   typeKey,
-                  type.toTypeName,
+                  type.typeName,
                   valueKey,
                   serializer::serialize
               )
