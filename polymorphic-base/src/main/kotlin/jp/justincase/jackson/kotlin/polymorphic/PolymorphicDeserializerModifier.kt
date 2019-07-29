@@ -29,10 +29,11 @@ object PolymorphicDeserializerModifier : BeanDeserializerModifier() {
     @Suppress("UNCHECKED_CAST")
     beanClass as KClass<T>
 
-    val typeTable = beanClass
+    val polymorphic = beanClass
         .allNonInterfaceSuperclasses
         .mapNotNull { it.companionObjectInstance as? Polymorphic }
         .firstOrNull()
+    val typeTable = polymorphic
         .let { beanClass.leafClassPolymorphicInstances(it) }
         .fold(HashBasedTable.create<String, String, Pair<KClass<out T>, String?>>()) { table, it ->
           val (t, p) = it
@@ -45,14 +46,22 @@ object PolymorphicDeserializerModifier : BeanDeserializerModifier() {
           table
         }
 
-    return if (typeTable.isEmpty) {
-      deserializer
-    } else {
+    return if (!typeTable.isEmpty) {
       PolymorphicDeserializer(
           typeTable.rowMap(),
           beanClass,
           deserializer::deserialize
       )
+    } else {
+      val wrapper = polymorphic?.run {
+        PolymorphicDirectDeserializer(
+            typeKey,
+            beanClass.toTypeName,
+            valueKey,
+            deserializer::deserialize
+        )
+      }
+      wrapper ?: deserializer
     }
   }
 }
