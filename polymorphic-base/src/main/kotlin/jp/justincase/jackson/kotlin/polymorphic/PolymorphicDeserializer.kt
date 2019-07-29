@@ -53,7 +53,7 @@ class PolymorphicDeserializer<T : Any>(
     }
 
     return if (!matches.hasNext()) {
-      rootDelegate(node.traverse(p.codec), ctxt)
+      rootDelegate(node.traverse(p.codec).also { it.nextToken() }, ctxt)
     } else {
       val (key, factory) = matches.next()
       val (type, valueKey) = factory
@@ -67,16 +67,16 @@ class PolymorphicDeserializer<T : Any>(
 
         throw reportInputMismatch(ctxt, message)
       } else {
-        val traversal = if (valueKey != null) {
-          node.get(valueKey).traverse(p.codec)
-        } else {
-          node.remove(key)
-
-          node.traverse(p.codec)
-        }
-        traversal.nextToken()
-
         if (type == rootClass) {
+          val traversal = if (valueKey != null) {
+            node.get(valueKey).traverse(p.codec)
+          } else {
+            node.remove(key)
+
+            node.traverse(p.codec)
+          }
+          traversal.nextToken()
+
           rootDelegate(traversal, ctxt)
         } else {
           val out = contextualType
@@ -95,10 +95,10 @@ class PolymorphicDeserializer<T : Any>(
                 }
               }
               .toJavaType(ctxt.typeFactory)
-              .let {
-                it.rawClass.kotlin.objectInstance ?: ctxt
-                    .findNonContextualValueDeserializer(it)
-                    .deserialize(traversal, ctxt)
+              .let { t ->
+                t.rawClass.kotlin.objectInstance ?: ctxt
+                    .findNonContextualValueDeserializer(t)
+                    .deserialize(node.traverse(p.codec).also { it.nextToken() }, ctxt)
               }
 
           // Deserialization as a subtype of the contextual type

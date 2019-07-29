@@ -25,14 +25,13 @@ class PolymorphicDirectDeserializer<T : Any>(
       it as? ObjectNode ?: throw reportInputMismatch(ctxt, "${it::class} is not a JSON object representation")
     }
 
-    val alreadyUnwrapped = (node.remove(typeKey) as? TextNode).let {
+    (node.remove(typeKey) as? TextNode).let {
       when (val text = it?.textValue()) {
-        typeName -> false
-        null -> true
+        typeName -> Unit
         else -> throw reportInputMismatch(ctxt, "Type name $text found instead of $typeName")
       }
     }
-    val traversal = if (alreadyUnwrapped || valueKey == null) {
+    val traversal = if (valueKey == null) {
       node.traverse(p.codec)
     } else {
       node[valueKey].traverse(p.codec)
