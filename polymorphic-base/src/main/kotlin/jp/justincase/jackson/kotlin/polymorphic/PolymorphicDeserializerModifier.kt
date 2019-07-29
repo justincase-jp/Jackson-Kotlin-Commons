@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.JsonDeserializer
 import com.fasterxml.jackson.databind.deser.BeanDeserializerModifier
 import com.fasterxml.jackson.databind.deser.ResolvableDeserializer
 import com.google.common.collect.HashBasedTable
+import jp.justincase.jackson.kotlin.core.allNonInterfaceSuperclasses
 import kotlin.reflect.KClass
 import kotlin.reflect.full.companionObjectInstance
 

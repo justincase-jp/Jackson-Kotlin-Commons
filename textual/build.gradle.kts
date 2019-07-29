@@ -16,8 +16,7 @@ dependencies {
   implementation(project(":core"))
 
   api(jacksonDataBinding())
-  implementation("com.google.guava", "guava", "28.0-jre")
+  implementation(guava())
 
   testImplementation(kotlinTestJUnit5Runner())
-  testImplementation(jacksonKotlinModule())
 }

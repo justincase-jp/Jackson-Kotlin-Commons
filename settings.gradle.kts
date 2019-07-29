@@ -1,4 +1,6 @@
 include(
     "polymorphic",
-    "polymorphic-base"
+    "polymorphic-base",
+    "textual",
+    "core"
 )
