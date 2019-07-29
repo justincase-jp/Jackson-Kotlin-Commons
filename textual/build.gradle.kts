@@ -19,4 +19,5 @@ dependencies {
   implementation(guava())
 
   testImplementation(kotlinTestJUnit5Runner())
+  testImplementation(jacksonKotlinModule())
 }
