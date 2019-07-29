@@ -54,21 +54,24 @@ object PolymorphicDeserializerModifier : BeanDeserializerModifier() {
           deserializer::deserialize
       )
     } else {
-      val wrapper = polymorphic?.run {
-        PolymorphicDirectDeserializer(
-            typeKey,
-            beanClass.toTypeName,
-            valueKey,
-            deserializer::deserialize,
-            if (deserializer is ResolvableDeserializer) {
-              val resolvable: ResolvableDeserializer = deserializer
+      val wrapper = polymorphic
+          ?.takeIf { beanClass.companionObjectInstance != it } // Ignore 'self-polymorphic' type
+          ?.run {
+            PolymorphicDirectDeserializer(
+                typeKey,
+                beanClass.toTypeName,
+                valueKey,
+                deserializer::deserialize,
+                if (deserializer is ResolvableDeserializer) {
+                  val resolvable: ResolvableDeserializer = deserializer
 
-              { resolvable.resolve(it) } // Aid type inference by using lambda
-            } else {
-              constant(Unit)
-            }
-        )
-      }
+                  { resolvable.resolve(it) } // Aid type inference by using lambda
+                } else {
+                  constant(Unit)
+                }
+            )
+          }
+
       wrapper ?: deserializer
     }
   }
