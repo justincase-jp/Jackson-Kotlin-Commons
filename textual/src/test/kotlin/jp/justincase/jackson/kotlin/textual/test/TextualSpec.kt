@@ -24,7 +24,7 @@ class TextualSpec : StringSpec({
 
   mapper.apply {
     "textual type deserialization should work" {
-      mapper.readValue<Hexadecimal>(""""A"""") shouldBe Hexadecimal(10)
+      readValue<Hexadecimal>(""""A"""") shouldBe Hexadecimal(10)
     }
   }
 })
