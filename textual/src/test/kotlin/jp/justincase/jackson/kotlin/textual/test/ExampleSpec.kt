@@ -13,8 +13,8 @@ data class Hexadecimal(val value: Int) {
     override val Hexadecimal.text
       get() = value.toString(16)
 
-    override fun fromText(text: String) =
-        Hexadecimal(text.toInt(16))
+    override fun fromText(value: String) =
+        Hexadecimal(value.toInt(16))
   }
 }
 

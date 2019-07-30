@@ -17,13 +17,13 @@ sealed class Option<out T> {
       }
 
     override
-    fun fromText(text: String) =
-        when (text) {
+    fun fromText(value: String) =
+        when (value) {
           "" -> None
-          else -> if (text.first() == '!') {
-            Some(text.substring(1))
+          else -> if (value.first() == '!') {
+            Some(value.substring(1))
           } else {
-            throw IllegalArgumentException(text)
+            throw IllegalArgumentException(value)
           }
         }
   }

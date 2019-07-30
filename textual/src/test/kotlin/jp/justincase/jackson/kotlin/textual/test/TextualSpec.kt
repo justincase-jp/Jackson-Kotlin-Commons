@@ -19,10 +19,10 @@ data class MyUnit(
       get() = "()"
 
     override
-    fun fromText(text: String): MyUnit =
-        when (text) {
+    fun fromText(value: String): MyUnit =
+        when (value) {
           "()" -> MyUnit()
-          else -> throw IllegalArgumentException(text)
+          else -> throw IllegalArgumentException(value)
         }
   }
 }

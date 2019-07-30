@@ -7,5 +7,5 @@ interface TextualSerializer<in T : Any> {
 }
 
 interface TextualDeserializer<out T : Any> {
-  fun fromText(text: String): T
+  fun fromText(value: String): T
 }
