@@ -98,3 +98,40 @@ fun main() {
   println(mapper.readValue<Result>("""{"type":"Failure","payload":{"message":"Unknown"}}""")) // Failure(message=Unknown)
 }
 ```
+
+## Textual
+Representation as JSON string by supplied conversion rules.
+
+### Basic usage
+
+```kotlin
+data class Hexadecimal(val value: Int) {
+  companion object : Textual<Hexadecimal> {
+    override val Hexadecimal.text
+      get() = value.toString(16)
+
+    override fun fromText(text: String) =
+        Hexadecimal(text.toInt(16))
+  }
+}
+
+fun main() {
+  val mapper = ObjectMapper().registerModule(TextualModule())
+
+  println(mapper.writeValueAsString(Hexadecimal(1000))) // "3e8"
+  println(mapper.readValue<Hexadecimal>(""""2a"""")) // Hexadecimal(value=42)
+}
+```
+
+### Installation
+
+Gradle Kotlin DSL
+
+```kotlin
+repositories {
+  maven("https://jitpack.io")
+}
+dependencies {
+  implementation("io.github.justincase-jp.jackson-kotlin-commons", "textual", VERSION)
+}
+```

@@ -7,18 +7,6 @@ import io.kotlintest.specs.StringSpec
 import jp.justincase.jackson.kotlin.textual.Textual
 import jp.justincase.jackson.kotlin.textual.TextualModule
 
-data class Hexadecimal(val value: Int) {
-  companion object : Textual<Hexadecimal> {
-    override
-    val Hexadecimal.text
-      get() = value.toString(16)
-
-    override
-    fun fromText(text: String) =
-        Hexadecimal(text.toInt(16))
-  }
-}
-
 class TextualSpec : StringSpec({
   val mapper = ObjectMapper().registerModule(TextualModule())
 
