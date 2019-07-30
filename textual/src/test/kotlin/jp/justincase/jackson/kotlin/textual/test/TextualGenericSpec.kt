@@ -39,10 +39,10 @@ class TextualGenericSpec : StringSpec({
 
   mapper.apply {
     "textual type with type parameter should deserialize with the declaring type" {
-      readValue<Option<CharSequence>>("""""""") shouldBe None
+      readValue<Option<CharSequence>>(writeValueAsString("")) shouldBe None
     }
     "textual type with type parameter should deserialize with the exact type" {
-      readValue<None>("""""""") shouldBe None
+      readValue<None>(writeValueAsString("")) shouldBe None
     }
   }
 })
