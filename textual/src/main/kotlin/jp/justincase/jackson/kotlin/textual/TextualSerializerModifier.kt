@@ -6,7 +6,7 @@ import com.fasterxml.jackson.databind.JsonSerializer
 import com.fasterxml.jackson.databind.SerializationConfig
 import com.fasterxml.jackson.databind.SerializerProvider
 import com.fasterxml.jackson.databind.ser.BeanSerializerModifier
-import jp.justincase.jackson.kotlin.core.allNonInterfaceSuperclasses
+import jp.justincase.jackson.kotlin.internal.allNonInterfaceSuperclasses
 import kotlin.reflect.full.companionObjectInstance
 
 private

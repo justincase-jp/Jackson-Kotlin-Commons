@@ -13,7 +13,7 @@ dependencies {
   implementation(kotlin("stdlib"))
   implementation(kotlin("reflect"))
 
-  implementation(project(":core"))
+  implementation(project(":internal"))
 
   api(jacksonDataBinding())
   implementation("com.google.guava", "guava", "28.0-jre")

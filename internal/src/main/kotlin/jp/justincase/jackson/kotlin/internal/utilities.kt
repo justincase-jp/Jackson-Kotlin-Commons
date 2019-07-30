@@ -1,5 +1,5 @@
 @file:Suppress("UnstableApiUsage")
-package jp.justincase.jackson.kotlin.core
+package jp.justincase.jackson.kotlin.internal
 
 import com.fasterxml.jackson.databind.JavaType
 import com.fasterxml.jackson.databind.type.TypeFactory

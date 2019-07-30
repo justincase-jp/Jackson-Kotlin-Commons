@@ -7,8 +7,8 @@ import com.fasterxml.jackson.databind.DeserializationContext
 import com.fasterxml.jackson.databind.JsonDeserializer
 import com.fasterxml.jackson.databind.deser.BeanDeserializerModifier
 import com.google.common.reflect.TypeToken
-import jp.justincase.jackson.kotlin.core.allNonInterfaceSuperclasses
-import jp.justincase.jackson.kotlin.core.toTypeToken
+import jp.justincase.jackson.kotlin.internal.allNonInterfaceSuperclasses
+import jp.justincase.jackson.kotlin.internal.toTypeToken
 import kotlin.reflect.KClass
 import kotlin.reflect.full.companionObjectInstance
 import kotlin.reflect.full.safeCast
