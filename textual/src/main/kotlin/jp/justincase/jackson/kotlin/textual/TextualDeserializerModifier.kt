@@ -33,6 +33,7 @@ class SuperDeserializer<T : Any>(
       subtype.safeCast(delegate(p.text)) ?: fallback(p, ctxt)
 }
 
+
 internal
 object TextualDeserializerModifier : BeanDeserializerModifier() {
   override
@@ -70,7 +71,7 @@ object TextualDeserializerModifier : BeanDeserializerModifier() {
                 Deserializer(it::fromText)
               }
               // We should reject unrelated types,
-              // but by now we will assume that only related type is used in the type parameter,
+              // but by now we will assume that only related type is used in the type parameter
               // util we found a better way to confirm sub-typing
               else -> {
                 // The requested raw type

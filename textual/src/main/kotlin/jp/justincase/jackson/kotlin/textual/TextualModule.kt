@@ -7,6 +7,7 @@ class TextualModule : SimpleModule() {
   fun setupModule(context: SetupContext) {
     super.setupModule(context)
 
+    context.addBeanSerializerModifier(TextualSerializerModifier)
     context.addBeanDeserializerModifier(TextualDeserializerModifier)
   }
 }
