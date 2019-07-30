@@ -1,7 +1,9 @@
 @file:Suppress("UnstableApiUsage")
 package jp.justincase.jackson.kotlin.internal
 
+import com.fasterxml.jackson.databind.DeserializationContext
 import com.fasterxml.jackson.databind.JavaType
+import com.fasterxml.jackson.databind.JsonDeserializer
 import com.fasterxml.jackson.databind.type.TypeFactory
 import com.google.common.reflect.TypeToken
 import java.lang.reflect.GenericArrayType
@@ -10,6 +12,10 @@ import java.lang.reflect.Type
 import java.lang.reflect.WildcardType
 import kotlin.reflect.KClass
 import kotlin.reflect.KVariance
+
+fun JsonDeserializer<*>.reportInputMismatch(context: DeserializationContext, message: String): Throwable =
+    context.reportInputMismatch(this, message)
+
 
 val <T : Any> KClass<in T>.allNonInterfaceSuperclasses: Sequence<KClass<in T>>
   get() = generateSequence<Class<*>>(java, Class<*>::getSuperclass).map {

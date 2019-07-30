@@ -22,10 +22,5 @@ fun <T : Any> KClass<T>.leafClassPolymorphicInstances(root: Polymorphic?): Seque
 
 
 internal
-fun JsonDeserializer<*>.reportInputMismatch(context: DeserializationContext, message: String): Throwable =
-    context.reportInputMismatch(this, message)
-
-
-internal
 fun <T, R> constant(value: R): (T) -> R =
     { value }

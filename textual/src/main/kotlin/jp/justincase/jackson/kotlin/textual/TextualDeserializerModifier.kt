@@ -8,6 +8,7 @@ import com.fasterxml.jackson.databind.JsonDeserializer
 import com.fasterxml.jackson.databind.deser.BeanDeserializerModifier
 import com.google.common.reflect.TypeToken
 import jp.justincase.jackson.kotlin.internal.allNonInterfaceSuperclasses
+import jp.justincase.jackson.kotlin.internal.reportInputMismatch
 import jp.justincase.jackson.kotlin.internal.toTypeToken
 import kotlin.reflect.KClass
 import kotlin.reflect.full.companionObjectInstance
@@ -19,7 +20,13 @@ class Deserializer<T : Any>(
 ) : JsonDeserializer<T>() {
   override
   fun deserialize(p: JsonParser, ctxt: DeserializationContext): T =
-      delegate(p.text)
+      p.text.let {
+        try {
+          delegate(it)
+        } catch (e: IllegalArgumentException) {
+          throw reportInputMismatch(ctxt, "$e")
+        }
+      }
 }
 
 private

@@ -7,6 +7,7 @@ import com.fasterxml.jackson.databind.JsonDeserializer
 import com.fasterxml.jackson.databind.deser.ResolvableDeserializer
 import com.fasterxml.jackson.databind.node.ObjectNode
 import com.fasterxml.jackson.databind.node.TextNode
+import jp.justincase.jackson.kotlin.internal.reportInputMismatch
 
 internal
 class PolymorphicDirectDeserializer<T : Any>(

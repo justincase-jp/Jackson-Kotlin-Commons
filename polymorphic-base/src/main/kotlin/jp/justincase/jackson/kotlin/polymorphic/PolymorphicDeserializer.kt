@@ -10,6 +10,7 @@ import com.fasterxml.jackson.databind.deser.ContextualDeserializer
 import com.fasterxml.jackson.databind.node.ObjectNode
 import com.fasterxml.jackson.databind.node.TextNode
 import com.google.common.reflect.TypeToken
+import jp.justincase.jackson.kotlin.internal.reportInputMismatch
 import jp.justincase.jackson.kotlin.internal.toJavaType
 import jp.justincase.jackson.kotlin.internal.toTypeToken
 import java.lang.IllegalArgumentException
