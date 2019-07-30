@@ -135,3 +135,8 @@ dependencies {
   implementation("io.github.justincase-jp.jackson-kotlin-commons", "textual", VERSION)
 }
 ```
+
+### Caveats
+
+*Currently the type parameter of `Textual` is not checked against its companion type,
+so please be careful if you want to support a selected subset of possible values.*
