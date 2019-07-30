@@ -38,7 +38,7 @@ fun main() {
 class ExampleSpec : StringSpec({
   val mapper = jacksonObjectMapper().registerModule(PolymorphicModule())
 
-  """`main` should work""" {
+  "`main` should work" {
     main()
   }
   "Example output 1 should match the comment" {

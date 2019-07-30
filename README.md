@@ -78,3 +78,23 @@ fun main() {
   println(mapper.readValue<Identity>("""{"role":"admin","id":"B"}""")) // Admin(id=B)
 }
 ```
+
+##### Wrapped object
+
+```kotlin
+sealed class Result {
+  companion object : Polymorphic {
+    override val valueKey = "payload"
+  }
+}
+
+data class Success<T>(val value: T) : Result()
+data class Failure(val message: String) : Result()
+
+fun main() {
+  val mapper = jacksonObjectMapper().registerModule(PolymorphicModule())
+
+  println(mapper.writeValueAsString(Success(30))) // {"type":"Success","payload":{"value":30}}
+  println(mapper.readValue<Result>("""{"type":"Failure","payload":{"message":"Unknown"}}""")) // Failure(message=Unknown)
+}
+```

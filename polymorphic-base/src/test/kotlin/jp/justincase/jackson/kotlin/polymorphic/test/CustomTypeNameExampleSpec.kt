@@ -28,10 +28,11 @@ fun main() {
   println(mapper.readValue<Identity>("""{"role":"admin","id":"B"}""")) // Admin(id=B)
 }
 
+
 class CustomTypeKeyExampleSpec : StringSpec({
   val mapper = jacksonObjectMapper().registerModule(PolymorphicModule())
 
-  """`main` should work""" {
+  "`main` should work" {
     main()
   }
   "Example output 1 should match the comment" {
