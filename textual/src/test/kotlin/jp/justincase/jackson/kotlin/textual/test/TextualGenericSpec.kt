@@ -5,7 +5,7 @@ import com.fasterxml.jackson.module.kotlin.readValue
 import io.kotlintest.shouldBe
 import io.kotlintest.specs.WordSpec
 import jp.justincase.jackson.kotlin.textual.Textual
-import jp.justincase.jackson.kotlin.textual.TextualModule
+import jp.justincase.jackson.kotlin.textual.codec.TextualModule
 
 sealed class Option<out T> {
   companion object : Textual<Option<CharSequence>> {

@@ -1,6 +1,8 @@
 include(
     "polymorphic",
-    "polymorphic-base",
+    "polymorphic-codec",
+    "polymorphic-interface",
     "textual",
+    "textual-interface",
     "internal"
 )

@@ -1,12 +1,11 @@
 package jp.justincase.jackson.kotlin.textual.test
 
 import com.fasterxml.jackson.databind.ObjectMapper
-import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
 import io.kotlintest.shouldBe
 import io.kotlintest.specs.StringSpec
 import jp.justincase.jackson.kotlin.textual.Textual
-import jp.justincase.jackson.kotlin.textual.TextualModule
+import jp.justincase.jackson.kotlin.textual.codec.TextualModule
 
 data class Hexadecimal(val value: Int) {
   companion object : Textual<Hexadecimal> {

@@ -7,7 +7,7 @@ import io.kotlintest.shouldBe
 import io.kotlintest.shouldThrow
 import io.kotlintest.specs.StringSpec
 import jp.justincase.jackson.kotlin.textual.Textual
-import jp.justincase.jackson.kotlin.textual.TextualModule
+import jp.justincase.jackson.kotlin.textual.codec.TextualModule
 import java.lang.IllegalArgumentException
 
 data class MyUnit(

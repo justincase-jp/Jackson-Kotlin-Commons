@@ -14,10 +14,10 @@ dependencies {
   implementation(kotlin("reflect"))
 
   implementation(project(":internal"))
-  implementation(project(":textual-interface"))
+  api(project(":polymorphic-interface"))
 
   api(jacksonDataBinding())
-  implementation(guava())
+  implementation("com.google.guava", "guava", "28.0-jre")
 
   testImplementation(kotlinTestJUnit5Runner())
   testImplementation(jacksonKotlinModule())

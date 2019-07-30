@@ -4,6 +4,6 @@ plugins {
 }
 
 dependencies {
-  api(project(":polymorphic-base"))
+  api(project(":polymorphic-codec"))
   api(jacksonKotlinModule())
 }
