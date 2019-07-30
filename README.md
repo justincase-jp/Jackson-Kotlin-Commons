@@ -7,10 +7,10 @@
 
 Jackson Kotlin Commons
 ===
-Pluggable Kotlin utilities for JSON serialization with Jackson.
+Pluggable Kotlin utilities for type-safe JSON encoding with Jackson.
 
 ## Polymorphic
-Sealed-class based polymorphic type serialization.
+Sealed-class based polymorphic type JSON encoding.
 
 ### Basic usage
 
