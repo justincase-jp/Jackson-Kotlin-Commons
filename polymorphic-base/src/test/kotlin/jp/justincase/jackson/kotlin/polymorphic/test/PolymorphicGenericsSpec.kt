@@ -38,6 +38,9 @@ class PolymorphicGenericsSpec : WordSpec({
       "work with round trip" {
         readValue<GenericBase<List<List<String>>>>(writeValueAsString(impl)) shouldBe impl
       }
+      "work with exact type deserialization" {
+        readValue<GenericBase.Impl<List<String>>>(writeValueAsString(impl)) shouldBe impl
+      }
     }
   }
 })
