@@ -25,7 +25,7 @@ class Deserializer<T : Any>(
         try {
           delegate(it)
         } catch (e: IllegalArgumentException) {
-          throw reportInputMismatch(ctxt, "$e")
+          throw reportInputMismatch(e, ctxt, "$e")
         }
       }
 }

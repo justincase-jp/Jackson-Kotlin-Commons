@@ -4,6 +4,7 @@ package jp.justincase.jackson.kotlin.internal
 import com.fasterxml.jackson.databind.DeserializationContext
 import com.fasterxml.jackson.databind.JavaType
 import com.fasterxml.jackson.databind.JsonDeserializer
+import com.fasterxml.jackson.databind.JsonMappingException
 import com.fasterxml.jackson.databind.type.TypeFactory
 import com.google.common.reflect.TypeToken
 import java.lang.reflect.GenericArrayType
@@ -15,6 +16,16 @@ import kotlin.reflect.KVariance
 
 fun JsonDeserializer<*>.reportInputMismatch(context: DeserializationContext, message: String): Throwable =
     context.reportInputMismatch(this, message)
+
+fun JsonDeserializer<*>.reportInputMismatch(
+    cause: Throwable, context: DeserializationContext, message: String
+): Throwable =
+    try {
+      context.reportInputMismatch(this, message)
+    } catch (e: JsonMappingException) {
+      e.internalDetachedCause = cause
+      throw e
+    }
 
 
 val <T : Any> KClass<in T>.allNonInterfaceSuperclasses: Sequence<KClass<in T>>

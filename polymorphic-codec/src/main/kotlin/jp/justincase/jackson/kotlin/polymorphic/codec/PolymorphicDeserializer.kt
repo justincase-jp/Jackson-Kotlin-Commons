@@ -93,7 +93,7 @@ class PolymorphicDeserializer<T : Any>(
                     @Suppress("UnstableApiUsage")
                     TypeToken.of(it.resolveTypeArgsForSubclass(type.java))
                   } catch (_: IllegalArgumentException) {
-                    throw reportInputMismatch(ctxt, "$type is not a subtype of $it: $e")
+                    throw reportInputMismatch(e, ctxt, "$type is not a subtype of $it: $e")
                   }
                 }
               }

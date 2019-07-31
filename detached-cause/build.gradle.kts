@@ -8,4 +8,6 @@ dependencies {
   implementation(kotlin("stdlib"))
 
   implementation(project(":internal"))
+
+  implementation(jacksonDataBinding())
 }
