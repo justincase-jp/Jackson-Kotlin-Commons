@@ -14,6 +14,7 @@ dependencies {
   implementation(kotlin("reflect"))
 
   implementation(project(":internal"))
+  implementation(project(":internal-primitive-codec"))
   implementation(project(":textual-interface"))
 
   api(jacksonDataBinding())

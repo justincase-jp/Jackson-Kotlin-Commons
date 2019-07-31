@@ -6,5 +6,6 @@ include(
     "textual-codec",
     "textual-interface",
     "internal",
+    "internal-primitive-codec",
     "detached-cause"
 )

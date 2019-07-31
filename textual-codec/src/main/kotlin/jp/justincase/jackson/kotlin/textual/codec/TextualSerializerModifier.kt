@@ -4,34 +4,11 @@ import com.fasterxml.jackson.core.JsonGenerator
 import com.fasterxml.jackson.databind.BeanDescription
 import com.fasterxml.jackson.databind.JsonSerializer
 import com.fasterxml.jackson.databind.SerializationConfig
-import com.fasterxml.jackson.databind.SerializerProvider
 import com.fasterxml.jackson.databind.ser.BeanSerializerModifier
+import jp.justincase.jackson.kotlin.internal.primitive.codec.PrimitiveSerializer
 import jp.justincase.jackson.kotlin.textual.TextualEncoder
 import kotlin.reflect.full.allSuperclasses
 import kotlin.reflect.full.companionObjectInstance
-
-private
-class Serializer<T : Any>(
-    private val delegate: (T) -> String,
-    private val fallback: (T, JsonGenerator, SerializerProvider) -> Unit
-) : JsonSerializer<T>() {
-  override
-  fun serialize(value: T, gen: JsonGenerator, serializers: SerializerProvider) =
-      // We should reject unrelated types,
-      // but by now we will assume that only related type is used in the type parameter
-      // util we found a better way to confirm sub-typing
-      try {
-        gen.writeString(delegate(value))
-      } catch (e: Exception) {
-        when (e) {
-          is ClassCastException, is NullPointerException ->
-            fallback(value, gen, serializers)
-          else ->
-            throw e
-        }
-      }
-}
-
 
 internal
 object TextualSerializerModifier : BeanSerializerModifier() {
@@ -55,7 +32,7 @@ object TextualSerializerModifier : BeanSerializerModifier() {
             @Suppress("UNCHECKED_CAST")
             val t = textual as TextualEncoder<T>
 
-            Serializer({ t.run { it.text } }, serializer::serialize)
+            PrimitiveSerializer({ t.run { it.text } }, serializer::serialize, JsonGenerator::writeString)
           }
           .firstOrNull()
           .let {

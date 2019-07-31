@@ -3,69 +3,16 @@ package jp.justincase.jackson.kotlin.textual.codec
 import com.fasterxml.jackson.core.JsonParser
 import com.fasterxml.jackson.databind.BeanDescription
 import com.fasterxml.jackson.databind.DeserializationConfig
-import com.fasterxml.jackson.databind.DeserializationContext
 import com.fasterxml.jackson.databind.JsonDeserializer
 import com.fasterxml.jackson.databind.deser.BeanDeserializerModifier
 import com.google.common.reflect.TypeToken
-import jp.justincase.jackson.kotlin.internal.reportInputMismatch
+import jp.justincase.jackson.kotlin.internal.primitive.codec.PrimitiveDeserializer
+import jp.justincase.jackson.kotlin.internal.primitive.codec.PrimitiveSuperDeserializer
 import jp.justincase.jackson.kotlin.internal.toTypeToken
 import jp.justincase.jackson.kotlin.textual.TextualDecoder
 import kotlin.reflect.KClass
 import kotlin.reflect.full.allSuperclasses
 import kotlin.reflect.full.companionObjectInstance
-import kotlin.reflect.full.safeCast
-
-private
-class Deserializer<T : Any>(
-    private val delegate: (String) -> T,
-    private val nullDelegate: () -> T?
-) : JsonDeserializer<T>() {
-  override
-  fun deserialize(p: JsonParser, ctxt: DeserializationContext): T =
-      p.text.let {
-        try {
-          delegate(it)
-        } catch (e: IllegalArgumentException) {
-          throw reportInputMismatch(e, ctxt, "$e")
-        }
-      }
-
-  override
-  fun getNullValue(ctxt: DeserializationContext): T? =
-      try {
-        nullDelegate()
-      } catch (e: IllegalArgumentException) {
-        throw reportInputMismatch(e, ctxt, "$e")
-      }
-}
-
-private
-class SuperDeserializer<T : Any>(
-    private val subtype: KClass<T>,
-    private val delegate: (String) -> Any,
-    private val nullDelegate: () -> Any?,
-    private val fallback: (JsonParser, DeserializationContext) -> T,
-    private val nullFallback: (DeserializationContext) -> T?
-) : JsonDeserializer<T>() {
-  override
-  fun deserialize(p: JsonParser, ctxt: DeserializationContext): T =
-      subtype.safeCast(p.text.let {
-        try {
-          delegate(it)
-        } catch (e: IllegalArgumentException) {
-          throw reportInputMismatch(e, ctxt, "$e")
-        }
-      }) ?: fallback(p, ctxt)
-
-  override
-  fun getNullValue(ctxt: DeserializationContext): T? =
-      subtype.safeCast(try {
-        nullDelegate()
-      } catch (e: IllegalArgumentException) {
-        throw reportInputMismatch(e, ctxt, "$e")
-      }) ?: nullFallback(ctxt)
-}
-
 
 internal
 object TextualDeserializerModifier : BeanDeserializerModifier() {
@@ -98,9 +45,10 @@ object TextualDeserializerModifier : BeanDeserializerModifier() {
                 @Suppress("UNCHECKED_CAST")
                 it as TextualDecoder<T>
 
-                Deserializer(
+                PrimitiveDeserializer(
                     it::fromText,
-                    it::fromNull
+                    it::fromNull,
+                    JsonParser::getText
                 )
               }
               // We should reject unrelated types,
@@ -111,10 +59,11 @@ object TextualDeserializerModifier : BeanDeserializerModifier() {
                 @Suppress("UNCHECKED_CAST")
                 val requestedRawType = (baseTypeToken.rawType as Class<*>).kotlin as KClass<T>
 
-                SuperDeserializer(
+                PrimitiveSuperDeserializer(
                     requestedRawType,
                     it::fromText,
                     it::fromNull,
+                    JsonParser::getText,
                     deserializer::deserialize,
                     deserializer::getNullValue
                 )
