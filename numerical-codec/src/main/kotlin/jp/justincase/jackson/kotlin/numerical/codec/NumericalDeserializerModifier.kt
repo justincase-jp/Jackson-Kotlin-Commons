@@ -15,7 +15,7 @@ import kotlin.reflect.full.allSuperclasses
 import kotlin.reflect.full.companionObjectInstance
 
 internal
-object NumericDeserializerModifier : BeanDeserializerModifier() {
+object NumericalDeserializerModifier : BeanDeserializerModifier() {
   override
   fun modifyDeserializer(
       config: DeserializationConfig,

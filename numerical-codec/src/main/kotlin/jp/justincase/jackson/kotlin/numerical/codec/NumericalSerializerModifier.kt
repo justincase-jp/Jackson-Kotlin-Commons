@@ -11,7 +11,7 @@ import kotlin.reflect.full.allSuperclasses
 import kotlin.reflect.full.companionObjectInstance
 
 internal
-object NumericSerializerModifier : BeanSerializerModifier() {
+object NumericalSerializerModifier : BeanSerializerModifier() {
   override
   fun modifySerializer(
       config: SerializationConfig,

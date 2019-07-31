@@ -7,7 +7,7 @@ import io.kotlintest.shouldBe
 import io.kotlintest.shouldThrow
 import io.kotlintest.specs.StringSpec
 import jp.justincase.jackson.kotlin.numerical.Numerical
-import jp.justincase.jackson.kotlin.numerical.codec.NumericModule
+import jp.justincase.jackson.kotlin.numerical.codec.NumericalModule
 import java.math.BigDecimal
 
 data class Natural(val value: BigDecimal) {
@@ -27,7 +27,7 @@ data class Natural(val value: BigDecimal) {
 
 private
 fun main() {
-  val mapper = ObjectMapper().registerModule(NumericModule())
+  val mapper = ObjectMapper().registerModule(NumericalModule())
 
   println(mapper.writeValueAsString(Natural(1000))) // 1000
   println(mapper.readValue<Natural>("1000")) // Natural(value=1000)
@@ -37,7 +37,7 @@ fun main() {
 
 
 class ExampleSpec: StringSpec({
-  val mapper = ObjectMapper().registerModule(NumericModule())
+  val mapper = ObjectMapper().registerModule(NumericalModule())
 
   "`main` should throws `MismatchedInputException`" {
     shouldThrow<MismatchedInputException> {
