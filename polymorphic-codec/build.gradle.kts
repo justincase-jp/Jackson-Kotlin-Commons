@@ -14,7 +14,7 @@ dependencies {
   implementation(kotlin("reflect"))
 
   implementation(project(":internal"))
-  api(project(":polymorphic-interface"))
+  implementation(project(":polymorphic-interface"))
 
   api(jacksonDataBinding())
   implementation("com.google.guava", "guava", "28.0-jre")

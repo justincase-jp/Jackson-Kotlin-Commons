@@ -14,7 +14,7 @@ dependencies {
   implementation(kotlin("reflect"))
 
   implementation(project(":internal"))
-  implementation(project(":textual-interface"))
+  api(project(":textual-interface"))
 
   api(jacksonDataBinding())
   implementation(guava())
