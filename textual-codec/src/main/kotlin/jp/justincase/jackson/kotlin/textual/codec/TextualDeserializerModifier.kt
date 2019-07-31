@@ -9,7 +9,7 @@ import com.fasterxml.jackson.databind.deser.BeanDeserializerModifier
 import com.google.common.reflect.TypeToken
 import jp.justincase.jackson.kotlin.internal.reportInputMismatch
 import jp.justincase.jackson.kotlin.internal.toTypeToken
-import jp.justincase.jackson.kotlin.textual.TextualDeserializer
+import jp.justincase.jackson.kotlin.textual.TextualDecoder
 import kotlin.reflect.KClass
 import kotlin.reflect.full.allSuperclasses
 import kotlin.reflect.full.companionObjectInstance
@@ -83,20 +83,20 @@ object TextualDeserializerModifier : BeanDeserializerModifier() {
       deserializer: JsonDeserializer<out T>
   ): JsonDeserializer<out T> =
       (sequenceOf(beanDesc.beanClass.kotlin) + beanDesc.beanClass.kotlin.allSuperclasses.asSequence())
-          .mapNotNull { it.companionObjectInstance as? TextualDeserializer<Any> }
+          .mapNotNull { it.companionObjectInstance as? TextualDecoder<Any> }
           .map {
             @Suppress("UnstableApiUsage")
             val typeToken = TypeToken
                 .of(it.javaClass)
-                .getSupertype(TextualDeserializer::class.java)
-                .resolveType(TextualDeserializer::class.java.typeParameters.first())
+                .getSupertype(TextualDecoder::class.java)
+                .resolveType(TextualDecoder::class.java.typeParameters.first())
             val baseTypeToken = beanDesc.type.toTypeToken()
 
             when {
               typeToken.isSubtypeOf(baseTypeToken) -> {
                 // The first parameter is a subtype of `T`
                 @Suppress("UNCHECKED_CAST")
-                it as TextualDeserializer<T>
+                it as TextualDecoder<T>
 
                 Deserializer(
                     it::fromText,

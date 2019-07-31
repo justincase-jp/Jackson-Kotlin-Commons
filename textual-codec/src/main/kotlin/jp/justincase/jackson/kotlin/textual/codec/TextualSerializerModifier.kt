@@ -6,7 +6,7 @@ import com.fasterxml.jackson.databind.JsonSerializer
 import com.fasterxml.jackson.databind.SerializationConfig
 import com.fasterxml.jackson.databind.SerializerProvider
 import com.fasterxml.jackson.databind.ser.BeanSerializerModifier
-import jp.justincase.jackson.kotlin.textual.TextualSerializer
+import jp.justincase.jackson.kotlin.textual.TextualEncoder
 import kotlin.reflect.full.allSuperclasses
 import kotlin.reflect.full.companionObjectInstance
 
@@ -49,11 +49,11 @@ object TextualSerializerModifier : BeanSerializerModifier() {
       serializer: JsonSerializer<in T>
   ): JsonSerializer<in T> =
       (sequenceOf(beanDesc.beanClass.kotlin) + beanDesc.beanClass.kotlin.allSuperclasses.asSequence())
-          .mapNotNull { it.companionObjectInstance as? TextualSerializer<Nothing> }
+          .mapNotNull { it.companionObjectInstance as? TextualEncoder<Nothing> }
           .map { textual ->
             // Catch for ClassCastException and NullPointerException by now
             @Suppress("UNCHECKED_CAST")
-            val t = textual as TextualSerializer<T>
+            val t = textual as TextualEncoder<T>
 
             Serializer({ t.run { it.text } }, serializer::serialize)
           }

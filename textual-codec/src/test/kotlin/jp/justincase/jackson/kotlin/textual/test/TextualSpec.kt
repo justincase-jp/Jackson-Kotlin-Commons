@@ -7,7 +7,7 @@ import io.kotlintest.shouldBe
 import io.kotlintest.shouldThrow
 import io.kotlintest.specs.StringSpec
 import jp.justincase.jackson.kotlin.textual.Textual
-import jp.justincase.jackson.kotlin.textual.TextualSerializer
+import jp.justincase.jackson.kotlin.textual.TextualEncoder
 import jp.justincase.jackson.kotlin.textual.codec.TextualModule
 import java.lang.IllegalArgumentException
 
@@ -33,7 +33,7 @@ data class MyUnit(
 }
 
 interface SimpleNameBase {
-  companion object : TextualSerializer<SimpleNameBase> {
+  companion object : TextualEncoder<SimpleNameBase> {
     override val SimpleNameBase.text: String
       get() = javaClass.simpleName
   }

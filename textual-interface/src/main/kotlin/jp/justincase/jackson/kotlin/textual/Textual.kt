@@ -1,12 +1,12 @@
 package jp.justincase.jackson.kotlin.textual
 
-interface Textual<T : Any> : TextualSerializer<T>, TextualDeserializer<T>
+interface Textual<T : Any> : TextualEncoder<T>, TextualDecoder<T>
 
-interface TextualSerializer<in T : Any> {
+interface TextualEncoder<in T : Any> {
   val T.text: String
 }
 
-interface TextualDeserializer<out T : Any> {
+interface TextualDecoder<out T : Any> {
   fun fromText(value: String): T
 
   fun fromNull(): T? = null
