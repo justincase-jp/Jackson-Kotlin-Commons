@@ -47,6 +47,7 @@ Gradle Kotlin DSL
 
 ```kotlin
 repositories {
+  jcenter()
   maven("https://jitpack.io")
 }
 dependencies {
@@ -129,6 +130,7 @@ Gradle Kotlin DSL
 
 ```kotlin
 repositories {
+  jcenter()
   maven("https://jitpack.io")
 }
 dependencies {
