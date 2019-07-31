@@ -10,7 +10,6 @@ tasks.getByName("test", Test::class) {
 }
 
 dependencies {
-  implementation(kotlin("stdlib"))
   implementation(kotlin("reflect"))
 
   implementation(project(":internal"))
