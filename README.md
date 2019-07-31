@@ -99,7 +99,7 @@ fun main() {
 }
 ```
 
-## Textual / Numeric
+## Textual / Numerical
 Representation as JSON string or number by supplied conversion rules.
 
 ### Basic usage
@@ -132,12 +132,15 @@ repositories {
   maven("https://jitpack.io")
 }
 dependencies {
-  implementation("io.github.justincase-jp.jackson-kotlin-commons", "textual", VERSION) // Textual
-  implementation("io.github.justincase-jp.jackson-kotlin-commons", "numeric", VERSION) // Numeric
+  // Textual
+  implementation("io.github.justincase-jp.jackson-kotlin-commons", "textual", VERSION)
+
+  // Numerical
+  implementation("io.github.justincase-jp.jackson-kotlin-commons", "numerical", VERSION)
 }
 ```
 
 ### Caveats
 
-*Currently the type parameter of `Textual` / `Numeric` is not checked against its companion type,
+*Currently the type parameter of `Textual` / `Numerical` is not checked against its companion type,
 so please be careful if you want to support a selected subset of possible values.*

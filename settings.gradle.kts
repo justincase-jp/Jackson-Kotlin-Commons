@@ -5,9 +5,9 @@ include(
     "textual",
     "textual-codec",
     "textual-interface",
-    "numeric",
-    "numeric-codec",
-    "numeric-interface",
+    "numerical",
+    "numerical-codec",
+    "numerical-interface",
     "internal",
     "internal-primitive-codec",
     "detached-cause"
