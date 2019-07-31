@@ -17,7 +17,8 @@ import kotlin.reflect.full.safeCast
 
 private
 class Deserializer<T : Any>(
-    private val delegate: (String) -> T
+    private val delegate: (String) -> T,
+    private val nullDelegate: () -> T?
 ) : JsonDeserializer<T>() {
   override
   fun deserialize(p: JsonParser, ctxt: DeserializationContext): T =
@@ -28,17 +29,41 @@ class Deserializer<T : Any>(
           throw reportInputMismatch(e, ctxt, "$e")
         }
       }
+
+  override
+  fun getNullValue(ctxt: DeserializationContext): T? =
+      try {
+        nullDelegate()
+      } catch (e: IllegalArgumentException) {
+        throw reportInputMismatch(e, ctxt, "$e")
+      }
 }
 
 private
 class SuperDeserializer<T : Any>(
     private val subtype: KClass<T>,
     private val delegate: (String) -> Any,
-    private val fallback: (JsonParser, DeserializationContext) -> T
+    private val nullDelegate: () -> Any?,
+    private val fallback: (JsonParser, DeserializationContext) -> T,
+    private val nullFallback: (DeserializationContext) -> T?
 ) : JsonDeserializer<T>() {
   override
   fun deserialize(p: JsonParser, ctxt: DeserializationContext): T =
-      subtype.safeCast(delegate(p.text)) ?: fallback(p, ctxt)
+      subtype.safeCast(p.text.let {
+        try {
+          delegate(it)
+        } catch (e: IllegalArgumentException) {
+          throw reportInputMismatch(e, ctxt, "$e")
+        }
+      }) ?: fallback(p, ctxt)
+
+  override
+  fun getNullValue(ctxt: DeserializationContext): T? =
+      subtype.safeCast(try {
+        nullDelegate()
+      } catch (e: IllegalArgumentException) {
+        throw reportInputMismatch(e, ctxt, "$e")
+      }) ?: nullFallback(ctxt)
 }
 
 
@@ -73,7 +98,10 @@ object TextualDeserializerModifier : BeanDeserializerModifier() {
                 @Suppress("UNCHECKED_CAST")
                 it as TextualDeserializer<T>
 
-                Deserializer(it::fromText)
+                Deserializer(
+                    it::fromText,
+                    it::fromNull
+                )
               }
               // We should reject unrelated types,
               // but by now we will assume that only related type is used in the type parameter
@@ -86,7 +114,9 @@ object TextualDeserializerModifier : BeanDeserializerModifier() {
                 SuperDeserializer(
                     requestedRawType,
                     it::fromText,
-                    deserializer::deserialize
+                    it::fromNull,
+                    deserializer::deserialize,
+                    deserializer::getNullValue
                 )
               }
             }

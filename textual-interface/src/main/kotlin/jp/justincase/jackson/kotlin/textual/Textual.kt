@@ -8,4 +8,6 @@ interface TextualSerializer<in T : Any> {
 
 interface TextualDeserializer<out T : Any> {
   fun fromText(value: String): T
+
+  fun fromNull(): T? = null
 }
