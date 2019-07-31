@@ -1,10 +1,24 @@
 plugins {
   maven
+  kotlin("jvm")
   `java-library`
 }
 
+tasks.getByName("test", Test::class) {
+  @Suppress("UnstableApiUsage")
+  useJUnitPlatform()
+}
+
 dependencies {
-  api(project(":textual-codec"))
+  implementation(kotlin("stdlib"))
+  implementation(kotlin("reflect"))
+
+  implementation(project(":internal"))
   api(project(":textual-interface"))
-  api(jacksonKotlinModule())
+
+  api(jacksonDataBinding())
+  implementation(guava())
+
+  testImplementation(kotlinTestJUnit5Runner())
+  testImplementation(jacksonKotlinModule())
 }
