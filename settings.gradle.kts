@@ -5,5 +5,6 @@ include(
     "textual",
     "textual-codec",
     "textual-interface",
-    "internal"
+    "internal",
+    "detached-cause"
 )
