@@ -7,11 +7,11 @@ import com.fasterxml.jackson.databind.DeserializationContext
 import com.fasterxml.jackson.databind.JsonDeserializer
 import com.fasterxml.jackson.databind.deser.BeanDeserializerModifier
 import com.google.common.reflect.TypeToken
-import jp.justincase.jackson.kotlin.internal.allNonInterfaceSuperclasses
 import jp.justincase.jackson.kotlin.internal.reportInputMismatch
 import jp.justincase.jackson.kotlin.internal.toTypeToken
 import jp.justincase.jackson.kotlin.textual.TextualDeserializer
 import kotlin.reflect.KClass
+import kotlin.reflect.full.allSuperclasses
 import kotlin.reflect.full.companionObjectInstance
 import kotlin.reflect.full.safeCast
 
@@ -57,10 +57,7 @@ object TextualDeserializerModifier : BeanDeserializerModifier() {
       beanDesc: BeanDescription,
       deserializer: JsonDeserializer<out T>
   ): JsonDeserializer<out T> =
-      beanDesc
-          .beanClass
-          .kotlin
-          .allNonInterfaceSuperclasses
+      (sequenceOf(beanDesc.beanClass.kotlin) + beanDesc.beanClass.kotlin.allSuperclasses.asSequence())
           .mapNotNull { it.companionObjectInstance as? TextualDeserializer<Any> }
           .map {
             @Suppress("UnstableApiUsage")

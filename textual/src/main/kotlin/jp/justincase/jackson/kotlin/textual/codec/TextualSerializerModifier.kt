@@ -6,8 +6,8 @@ import com.fasterxml.jackson.databind.JsonSerializer
 import com.fasterxml.jackson.databind.SerializationConfig
 import com.fasterxml.jackson.databind.SerializerProvider
 import com.fasterxml.jackson.databind.ser.BeanSerializerModifier
-import jp.justincase.jackson.kotlin.internal.allNonInterfaceSuperclasses
 import jp.justincase.jackson.kotlin.textual.TextualSerializer
+import kotlin.reflect.full.allSuperclasses
 import kotlin.reflect.full.companionObjectInstance
 
 private
@@ -48,10 +48,7 @@ object TextualSerializerModifier : BeanSerializerModifier() {
       beanDesc: BeanDescription,
       serializer: JsonSerializer<in T>
   ): JsonSerializer<in T> =
-      beanDesc
-          .beanClass
-          .kotlin
-          .allNonInterfaceSuperclasses
+      (sequenceOf(beanDesc.beanClass.kotlin) + beanDesc.beanClass.kotlin.allSuperclasses.asSequence())
           .mapNotNull { it.companionObjectInstance as? TextualSerializer<Nothing> }
           .map { textual ->
             // Catch for ClassCastException and NullPointerException by now
