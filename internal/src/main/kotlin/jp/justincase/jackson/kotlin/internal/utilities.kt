@@ -13,6 +13,11 @@ import java.lang.reflect.Type
 import java.lang.reflect.WildcardType
 import kotlin.reflect.KClass
 import kotlin.reflect.KVariance
+import kotlin.reflect.full.companionObjectInstance
+
+val KClass<out Any>.effectiveCompanion
+  get() = objectInstance ?: companionObjectInstance
+
 
 fun JsonDeserializer<*>.reportInputMismatch(context: DeserializationContext, message: String): Throwable =
     context.reportInputMismatch(this, message)

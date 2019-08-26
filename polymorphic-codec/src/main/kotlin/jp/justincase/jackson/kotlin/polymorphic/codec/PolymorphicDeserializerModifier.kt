@@ -7,9 +7,9 @@ import com.fasterxml.jackson.databind.deser.BeanDeserializerModifier
 import com.fasterxml.jackson.databind.deser.ResolvableDeserializer
 import com.google.common.collect.HashBasedTable
 import jp.justincase.jackson.kotlin.internal.allNonInterfaceSuperclasses
+import jp.justincase.jackson.kotlin.internal.effectiveCompanion
 import jp.justincase.jackson.kotlin.polymorphic.Polymorphic
 import kotlin.reflect.KClass
-import kotlin.reflect.full.companionObjectInstance
 
 internal
 object PolymorphicDeserializerModifier : BeanDeserializerModifier() {
@@ -34,7 +34,7 @@ object PolymorphicDeserializerModifier : BeanDeserializerModifier() {
 
     val polymorphic = beanClass
         .allNonInterfaceSuperclasses
-        .mapNotNull { it.companionObjectInstance as? Polymorphic }
+        .mapNotNull { it.effectiveCompanion as? Polymorphic }
         .firstOrNull()
     val typeTable = polymorphic
         .let { beanClass.leafClassPolymorphicInstances(it) }
@@ -57,7 +57,7 @@ object PolymorphicDeserializerModifier : BeanDeserializerModifier() {
       )
     } else {
       val wrapper = polymorphic
-          ?.takeIf { beanClass.companionObjectInstance != it } // Ignore 'self-polymorphic' type
+          ?.takeIf { beanClass.effectiveCompanion != it } // Ignore 'self-polymorphic' type
           ?.run {
             PolymorphicDirectDeserializer(
                 typeKey,

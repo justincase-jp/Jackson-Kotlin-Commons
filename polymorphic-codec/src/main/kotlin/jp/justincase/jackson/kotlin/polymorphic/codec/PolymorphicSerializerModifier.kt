@@ -5,9 +5,9 @@ import com.fasterxml.jackson.databind.JsonSerializer
 import com.fasterxml.jackson.databind.SerializationConfig
 import com.fasterxml.jackson.databind.ser.BeanSerializerModifier
 import jp.justincase.jackson.kotlin.internal.allNonInterfaceSuperclasses
+import jp.justincase.jackson.kotlin.internal.effectiveCompanion
 import jp.justincase.jackson.kotlin.polymorphic.Polymorphic
 import kotlin.reflect.KClass
-import kotlin.reflect.full.companionObjectInstance
 
 internal
 object PolymorphicSerializerModifier : BeanSerializerModifier() {
@@ -37,7 +37,7 @@ object PolymorphicSerializerModifier : BeanSerializerModifier() {
         ?.let { (type, _) ->
           type
               .allNonInterfaceSuperclasses
-              .mapNotNull { it.companionObjectInstance as? Polymorphic }
+              .mapNotNull { it.effectiveCompanion as? Polymorphic }
               .firstOrNull()
               ?.let { type to it }
         }

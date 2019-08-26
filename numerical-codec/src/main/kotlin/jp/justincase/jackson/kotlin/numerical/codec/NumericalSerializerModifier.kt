@@ -5,10 +5,10 @@ import com.fasterxml.jackson.databind.BeanDescription
 import com.fasterxml.jackson.databind.JsonSerializer
 import com.fasterxml.jackson.databind.SerializationConfig
 import com.fasterxml.jackson.databind.ser.BeanSerializerModifier
+import jp.justincase.jackson.kotlin.internal.effectiveCompanion
 import jp.justincase.jackson.kotlin.internal.primitive.codec.PrimitiveSerializer
 import jp.justincase.jackson.kotlin.numerical.NumericalEncoder
 import kotlin.reflect.full.allSuperclasses
-import kotlin.reflect.full.companionObjectInstance
 
 internal
 object NumericalSerializerModifier : BeanSerializerModifier() {
@@ -26,7 +26,7 @@ object NumericalSerializerModifier : BeanSerializerModifier() {
       serializer: JsonSerializer<in T>
   ): JsonSerializer<in T> =
       (sequenceOf(beanDesc.beanClass.kotlin) + beanDesc.beanClass.kotlin.allSuperclasses.asSequence())
-          .mapNotNull { it.companionObjectInstance as? NumericalEncoder<Nothing> }
+          .mapNotNull { it.effectiveCompanion as? NumericalEncoder<Nothing> }
           .map { textual ->
             // Catch for ClassCastException and NullPointerException by now
             @Suppress("UNCHECKED_CAST")

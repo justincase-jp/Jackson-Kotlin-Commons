@@ -6,13 +6,13 @@ import com.fasterxml.jackson.databind.DeserializationConfig
 import com.fasterxml.jackson.databind.JsonDeserializer
 import com.fasterxml.jackson.databind.deser.BeanDeserializerModifier
 import com.google.common.reflect.TypeToken
+import jp.justincase.jackson.kotlin.internal.effectiveCompanion
 import jp.justincase.jackson.kotlin.internal.primitive.codec.PrimitiveDeserializer
 import jp.justincase.jackson.kotlin.internal.primitive.codec.PrimitiveSuperDeserializer
 import jp.justincase.jackson.kotlin.internal.toTypeToken
 import jp.justincase.jackson.kotlin.numerical.NumericalDecoder
 import kotlin.reflect.KClass
 import kotlin.reflect.full.allSuperclasses
-import kotlin.reflect.full.companionObjectInstance
 
 internal
 object NumericalDeserializerModifier : BeanDeserializerModifier() {
@@ -30,7 +30,7 @@ object NumericalDeserializerModifier : BeanDeserializerModifier() {
       deserializer: JsonDeserializer<out T>
   ): JsonDeserializer<out T> =
       (sequenceOf(beanDesc.beanClass.kotlin) + beanDesc.beanClass.kotlin.allSuperclasses.asSequence())
-          .mapNotNull { it.companionObjectInstance as? NumericalDecoder<Any> }
+          .mapNotNull { it.effectiveCompanion as? NumericalDecoder<Any> }
           .map {
             @Suppress("UnstableApiUsage")
             val typeToken = TypeToken
