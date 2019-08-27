@@ -11,6 +11,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode
 import com.fasterxml.jackson.databind.node.TextNode
 import com.google.common.reflect.TypeToken
 import jp.justincase.jackson.kotlin.internal.reportInputMismatch
+import jp.justincase.jackson.kotlin.internal.throwIfFatal
 import jp.justincase.jackson.kotlin.internal.toJavaType
 import jp.justincase.jackson.kotlin.internal.toTypeToken
 import java.lang.IllegalArgumentException
@@ -87,12 +88,14 @@ class PolymorphicDeserializer<T : Any>(
               .let {
                 try {
                   it.getSubtype(type.java)
-                } catch (e: IllegalArgumentException) {
+                } catch (e: Throwable) {
+                  e.throwIfFatal()
                   try {
                     // Work around '%s does not appear to be a subtype of %s' during TypeToken#getSubtype
                     @Suppress("UnstableApiUsage")
                     TypeToken.of(it.resolveTypeArgsForSubclass(type.java))
-                  } catch (_: IllegalArgumentException) {
+                  } catch (e1: Throwable) {
+                    e1.throwIfFatal()
                     throw reportInputMismatch(e, ctxt, "$type is not a subtype of $it: $e")
                   }
                 }

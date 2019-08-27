@@ -18,6 +18,12 @@ import kotlin.reflect.full.companionObjectInstance
 val KClass<out Any>.effectiveCompanion
   get() = objectInstance ?: companionObjectInstance
 
+fun Throwable.throwIfFatal() {
+  if (this is ThreadDeath || this is VirtualMachineError && this !is StackOverflowError) {
+    throw this as Error
+  }
+}
+
 
 fun JsonDeserializer<*>.reportInputMismatch(context: DeserializationContext, message: String): Throwable =
     context.reportInputMismatch(this, message)

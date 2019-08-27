@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonParser
 import com.fasterxml.jackson.databind.DeserializationContext
 import com.fasterxml.jackson.databind.JsonDeserializer
 import jp.justincase.jackson.kotlin.internal.reportInputMismatch
+import jp.justincase.jackson.kotlin.internal.throwIfFatal
 import kotlin.reflect.KClass
 import kotlin.reflect.full.safeCast
 
@@ -17,7 +18,8 @@ class PrimitiveDeserializer<T : Any, R : Any>(
       reader(p).let {
         try {
           delegate(it)
-        } catch (e: IllegalArgumentException) {
+        } catch (e: Throwable) {
+          e.throwIfFatal()
           throw reportInputMismatch(e, ctxt, "$e")
         }
       }
@@ -26,7 +28,8 @@ class PrimitiveDeserializer<T : Any, R : Any>(
   fun getNullValue(ctxt: DeserializationContext): T? =
       try {
         nullDelegate()
-      } catch (e: IllegalArgumentException) {
+      } catch (e: Throwable) {
+        e.throwIfFatal()
         throw reportInputMismatch(e, ctxt, "$e")
       }
 }
@@ -44,7 +47,8 @@ class PrimitiveSuperDeserializer<T : Any, R : Any>(
       subtype.safeCast(reader(p).let {
         try {
           delegate(it)
-        } catch (e: IllegalArgumentException) {
+        } catch (e: Throwable) {
+          e.throwIfFatal()
           throw reportInputMismatch(e, ctxt, "$e")
         }
       }) ?: fallback(p, ctxt)
@@ -53,7 +57,8 @@ class PrimitiveSuperDeserializer<T : Any, R : Any>(
   fun getNullValue(ctxt: DeserializationContext): T? =
       subtype.safeCast(try {
         nullDelegate()
-      } catch (e: IllegalArgumentException) {
+      } catch (e: Throwable) {
+        e.throwIfFatal()
         throw reportInputMismatch(e, ctxt, "$e")
       }) ?: nullFallback(ctxt)
 }
