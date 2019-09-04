@@ -13,7 +13,7 @@ data class BareImpl<T>(
     val prop1: T,
     val prop2: Int
 ) {
-  companion object : Polymorphic // Consider making this an error?
+  companion object : Polymorphic
 }
 
 sealed class LeakingBase {
@@ -51,6 +51,7 @@ class PolymorphicSpecialCaseSpec : WordSpec({
           prop2 = 1
       )
       val map = mapOf(
+          "type" to "BareImpl",
           "prop1" to listOf("a"),
           "prop2" to 1
       )

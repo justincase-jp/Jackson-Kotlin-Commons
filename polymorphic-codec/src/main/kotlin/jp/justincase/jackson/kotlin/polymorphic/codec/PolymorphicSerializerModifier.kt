@@ -33,14 +33,20 @@ object PolymorphicSerializerModifier : BeanSerializerModifier() {
     val modified = beanClass
         .allNonInterfaceSuperclasses
         .zipWithNext()
-        .firstOrNull { (_, t) -> t.isSealed }
-        ?.let { (type, _) ->
-          type
-              .allNonInterfaceSuperclasses
-              .mapNotNull { it.effectiveCompanion as? Polymorphic }
-              .firstOrNull()
-              ?.let { type to it }
+        .mapNotNull { (type, superType) ->
+          val c = type.effectiveCompanion as? Polymorphic
+
+          when {
+            c != null -> type to c
+            superType.isSealed -> superType
+                .allNonInterfaceSuperclasses
+                .mapNotNull { it.effectiveCompanion as? Polymorphic }
+                .firstOrNull()
+                ?.let { type to it }
+            else -> null
+          }
         }
+        .firstOrNull()
         ?.let { (type, p) ->
           p.run {
             when (val valueKey = valueKey) {
