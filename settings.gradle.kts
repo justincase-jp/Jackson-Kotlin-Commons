@@ -8,6 +8,7 @@ include(
     "numerical",
     "numerical-codec",
     "numerical-interface",
+    "enumerated",
     "internal",
     "internal-primitive-codec",
     "detached-cause"
