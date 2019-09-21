@@ -26,7 +26,11 @@ object TextualSerializerModifier : BeanSerializerModifier() {
       serializer: JsonSerializer<in T>
   ): JsonSerializer<in T> =
       (sequenceOf(beanDesc.beanClass.kotlin) + beanDesc.beanClass.kotlin.allSuperclasses.asSequence())
-          .mapNotNull { it.effectiveCompanion as? TextualEncoder<Nothing> }
+          .mapNotNull {
+            it.effectiveCompanion?.let { c ->
+              c as? TextualEncoder<Nothing> ?: c.enumeratedAsTextualEncoder
+            }
+          }
           .map { textual ->
             // Catch for ClassCastException and NullPointerException by now
             @Suppress("UNCHECKED_CAST")

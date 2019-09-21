@@ -30,7 +30,11 @@ object TextualDeserializerModifier : BeanDeserializerModifier() {
       deserializer: JsonDeserializer<out T>
   ): JsonDeserializer<out T> =
       (sequenceOf(beanDesc.beanClass.kotlin) + beanDesc.beanClass.kotlin.allSuperclasses.asSequence())
-          .mapNotNull { it.effectiveCompanion as? TextualDecoder<Any> }
+          .mapNotNull {
+            it.effectiveCompanion?.let { c ->
+              c as? TextualDecoder<Any> ?: c.enumeratedAsTextualDecoder
+            }
+          }
           .map {
             @Suppress("UnstableApiUsage")
             val typeToken = TypeToken

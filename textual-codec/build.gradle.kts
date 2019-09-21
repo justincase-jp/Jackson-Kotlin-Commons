@@ -15,6 +15,7 @@ dependencies {
   implementation(project(":internal"))
   implementation(project(":internal-primitive-codec"))
   implementation(project(":textual-interface"))
+  implementation(project(":enumerated"))
 
   api(jacksonDataBinding())
   implementation(guava())
