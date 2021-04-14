@@ -1,3 +1,4 @@
+@file:Suppress("BlockingMethodInNonBlockingContext")
 package jp.justincase.jackson.kotlin.numerical.test
 
 import com.fasterxml.jackson.databind.ObjectMapper
