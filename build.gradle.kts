@@ -10,7 +10,7 @@ tasks.getByName<Wrapper>("wrapper") {
 
 subprojects {
   repositories {
-    jcenter()
+    mavenCentral()
   }
 
   tasks.withType<KotlinCompile> {
