@@ -1,11 +1,9 @@
 package jp.justincase.jackson.kotlin.textual.test
 
 import com.fasterxml.jackson.databind.ObjectMapper
-import com.fasterxml.jackson.databind.exc.MismatchedInputException
 import com.fasterxml.jackson.module.kotlin.readValue
-import io.kotlintest.shouldBe
-import io.kotlintest.shouldThrow
-import io.kotlintest.specs.StringSpec
+import io.kotest.core.spec.style.StringSpec
+import io.kotest.matchers.shouldBe
 import jp.justincase.jackson.kotlin.enumerated.Enumerated
 import jp.justincase.jackson.kotlin.textual.codec.TextualModule
 

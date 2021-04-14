@@ -4,4 +4,4 @@ fun jacksonKotlinModule() = "com.fasterxml.jackson.module:jackson-module-kotlin:
 
 fun guava() = "com.google.guava:guava:28.0-jre"
 
-fun kotlinTestJUnit5Runner() = "io.kotlintest:kotlintest-runner-junit5:3.4.0"
+fun kotlinTestJUnit5Runner() = "io.kotest:kotest-runner-junit5-jvm:4.4.3"
