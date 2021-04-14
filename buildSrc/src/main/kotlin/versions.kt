@@ -1,2 +1,2 @@
 
-const val jackson_version = "2.9.9"
+const val jackson_version = "2.12.3"
