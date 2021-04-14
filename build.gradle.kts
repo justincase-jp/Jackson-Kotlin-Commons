@@ -5,7 +5,7 @@ plugins {
 }
 
 tasks.getByName<Wrapper>("wrapper") {
-  gradleVersion = "5.5.1"
+  gradleVersion = "6.8.3"
 }
 
 subprojects {
