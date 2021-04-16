@@ -1,12 +1,13 @@
+@file:Suppress("BlockingMethodInNonBlockingContext")
 package jp.justincase.jackson.kotlin.polymorphic.test
 
 import com.fasterxml.jackson.databind.JsonMappingException
 import com.fasterxml.jackson.databind.exc.MismatchedInputException
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
-import io.kotlintest.shouldBe
-import io.kotlintest.shouldThrow
-import io.kotlintest.specs.WordSpec
+import io.kotest.assertions.throwables.shouldThrow
+import io.kotest.core.spec.style.WordSpec
+import io.kotest.matchers.shouldBe
 import jp.justincase.jackson.kotlin.polymorphic.Polymorphic
 import jp.justincase.jackson.kotlin.polymorphic.codec.PolymorphicModule
 import kotlin.reflect.KClass

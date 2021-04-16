@@ -1,9 +1,10 @@
+@file:Suppress("BlockingMethodInNonBlockingContext")
 package jp.justincase.jackson.kotlin.textual.test
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
-import io.kotlintest.shouldBe
-import io.kotlintest.specs.WordSpec
+import io.kotest.core.spec.style.WordSpec
+import io.kotest.matchers.shouldBe
 import jp.justincase.jackson.kotlin.textual.Textual
 import jp.justincase.jackson.kotlin.textual.codec.TextualModule
 

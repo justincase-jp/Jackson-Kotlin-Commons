@@ -1,9 +1,10 @@
+@file:Suppress("BlockingMethodInNonBlockingContext")
 package jp.justincase.jackson.kotlin.polymorphic.test
 
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
-import io.kotlintest.shouldBe
-import io.kotlintest.specs.StringSpec
+import io.kotest.core.spec.style.StringSpec
+import io.kotest.matchers.shouldBe
 import jp.justincase.jackson.kotlin.polymorphic.Polymorphic
 import jp.justincase.jackson.kotlin.polymorphic.codec.PolymorphicModule
 import kotlin.reflect.KClass

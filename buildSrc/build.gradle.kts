@@ -11,6 +11,5 @@ tasks.withType<KotlinCompile> {
 }
 
 repositories {
-  // Current Kotlin DSL need JCenter to resolve stdlib for buildSrc compilation
-  jcenter()
+  mavenCentral()
 }

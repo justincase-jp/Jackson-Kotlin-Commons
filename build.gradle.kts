@@ -1,16 +1,16 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-  kotlin("jvm") version "1.3.41" apply false
+  kotlin("jvm") version "1.4.32" apply false
 }
 
 tasks.getByName<Wrapper>("wrapper") {
-  gradleVersion = "5.5.1"
+  gradleVersion = "6.8.3"
 }
 
 subprojects {
   repositories {
-    jcenter()
+    mavenCentral()
   }
 
   tasks.withType<KotlinCompile> {

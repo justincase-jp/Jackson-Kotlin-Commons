@@ -1,8 +1,8 @@
 package jp.justincase.jackson.kotlin.enumerated.test
 
-import io.kotlintest.should
-import io.kotlintest.shouldBe
-import io.kotlintest.specs.StringSpec
+import io.kotest.core.spec.style.StringSpec
+import io.kotest.matchers.should
+import io.kotest.matchers.shouldBe
 import jp.justincase.jackson.kotlin.enumerated.Enumerated
 import jp.justincase.jackson.kotlin.enumerated.values
 
