@@ -5,10 +5,10 @@ import com.fasterxml.jackson.databind.BeanDescription
 import com.fasterxml.jackson.databind.JsonSerializer
 import com.fasterxml.jackson.databind.SerializationConfig
 import com.fasterxml.jackson.databind.ser.BeanSerializerModifier
+import jp.justincase.jackson.kotlin.internal.allNonInterfaceSuperclassesAndInterfaces
 import jp.justincase.jackson.kotlin.internal.effectiveCompanion
 import jp.justincase.jackson.kotlin.internal.primitive.codec.PrimitiveSerializer
 import jp.justincase.jackson.kotlin.textual.TextualEncoder
-import kotlin.reflect.full.allSuperclasses
 
 internal
 object TextualSerializerModifier : BeanSerializerModifier() {
@@ -25,7 +25,7 @@ object TextualSerializerModifier : BeanSerializerModifier() {
       beanDesc: BeanDescription,
       serializer: JsonSerializer<in T>
   ): JsonSerializer<in T> =
-      (sequenceOf(beanDesc.beanClass.kotlin) + beanDesc.beanClass.kotlin.allSuperclasses.asSequence())
+      (sequenceOf(beanDesc.beanClass.kotlin) + beanDesc.beanClass.kotlin.allNonInterfaceSuperclassesAndInterfaces)
           .mapNotNull {
             it.effectiveCompanion?.let { c ->
               c as? TextualEncoder<Nothing> ?: c.enumeratedAsTextualEncoder

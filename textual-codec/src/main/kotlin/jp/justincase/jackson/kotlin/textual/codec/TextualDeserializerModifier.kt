@@ -6,13 +6,13 @@ import com.fasterxml.jackson.databind.DeserializationConfig
 import com.fasterxml.jackson.databind.JsonDeserializer
 import com.fasterxml.jackson.databind.deser.BeanDeserializerModifier
 import com.google.common.reflect.TypeToken
+import jp.justincase.jackson.kotlin.internal.allNonInterfaceSuperclassesAndInterfaces
 import jp.justincase.jackson.kotlin.internal.effectiveCompanion
 import jp.justincase.jackson.kotlin.internal.primitive.codec.PrimitiveDeserializer
 import jp.justincase.jackson.kotlin.internal.primitive.codec.PrimitiveSuperDeserializer
 import jp.justincase.jackson.kotlin.internal.toTypeToken
 import jp.justincase.jackson.kotlin.textual.TextualDecoder
 import kotlin.reflect.KClass
-import kotlin.reflect.full.allSuperclasses
 
 internal
 object TextualDeserializerModifier : BeanDeserializerModifier() {
@@ -29,7 +29,7 @@ object TextualDeserializerModifier : BeanDeserializerModifier() {
       beanDesc: BeanDescription,
       deserializer: JsonDeserializer<out T>
   ): JsonDeserializer<out T> =
-      (sequenceOf(beanDesc.beanClass.kotlin) + beanDesc.beanClass.kotlin.allSuperclasses.asSequence())
+      (sequenceOf(beanDesc.beanClass.kotlin) + beanDesc.beanClass.kotlin.allNonInterfaceSuperclassesAndInterfaces)
           .mapNotNull {
             it.effectiveCompanion?.let { c ->
               c as? TextualDecoder<Any> ?: c.enumeratedAsTextualDecoder
