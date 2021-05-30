@@ -7,6 +7,7 @@ import io.kotest.core.spec.style.StringSpec
 import io.kotest.matchers.shouldBe
 import jp.justincase.jackson.kotlin.polymorphic.Polymorphic
 import jp.justincase.jackson.kotlin.polymorphic.codec.PolymorphicModule
+import java.util.Locale.US
 import kotlin.reflect.KClass
 
 sealed class Identity {
@@ -14,7 +15,7 @@ sealed class Identity {
     override val typeKey = "role"
 
     override val KClass<out Any>.typeName
-      get() = simpleName?.toLowerCase() ?: throw IllegalArgumentException(toString())
+      get() = simpleName?.lowercase(US) ?: throw IllegalArgumentException(toString())
   }
 }
 

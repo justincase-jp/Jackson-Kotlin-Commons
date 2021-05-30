@@ -65,7 +65,7 @@ sealed class Identity {
     override val typeKey = "role"
 
     override val KClass<out Any>.typeName
-      get() = simpleName?.toLowerCase() ?: throw IllegalArgumentException(toString())
+      get() = simpleName?.lowercase(US) ?: throw IllegalArgumentException(toString())
   }
 }
 
