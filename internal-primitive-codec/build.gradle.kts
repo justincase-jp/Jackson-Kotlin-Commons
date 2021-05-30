@@ -11,4 +11,5 @@ dependencies {
   implementation(project(":internal"))
 
   api(jacksonDataBinding())
+  api(platform(jacksonBom()))
 }

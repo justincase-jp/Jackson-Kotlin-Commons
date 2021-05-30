@@ -19,6 +19,7 @@ dependencies {
   implementation(project(":enumerated"))
 
   api(jacksonDataBinding())
+  api(platform(jacksonBom()))
   implementation(guava())
 
   testImplementation(kotlinTestJUnit5Runner())

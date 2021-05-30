@@ -13,6 +13,7 @@ fun DependencyHandler.kotlinLibrary(module: String): Dependency =
 
 fun jacksonDataBinding() = "com.fasterxml.jackson.core:jackson-databind:$jackson_version"
 fun jacksonKotlinModule() = "com.fasterxml.jackson.module:jackson-module-kotlin:$jackson_version"
+fun jacksonBom() = "com.fasterxml.jackson:jackson-bom:$jackson_version"
 
 fun guava() = "com.google.guava:guava:30.1.1-jre"
 

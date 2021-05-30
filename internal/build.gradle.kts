@@ -9,5 +9,6 @@ dependencies {
   api(platform(kotlin("bom")))
 
   implementation(jacksonDataBinding())
+  api(platform(jacksonBom()))
   implementation(guava())
 }
