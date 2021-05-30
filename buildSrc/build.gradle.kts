@@ -13,3 +13,6 @@ tasks.withType<KotlinCompile> {
 repositories {
   mavenCentral()
 }
+dependencies {
+  compileOnly(gradleKotlinDsl())
+}

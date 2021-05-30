@@ -5,7 +5,7 @@ plugins {
 }
 
 dependencies {
-  implementation(kotlin("reflect"))
+  implementation(kotlinLibrary("reflect"))
   api(platform(kotlin("bom")))
 
   implementation(project(":internal"))

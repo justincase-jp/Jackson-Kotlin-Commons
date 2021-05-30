@@ -5,6 +5,6 @@ plugins {
 }
 
 dependencies {
-  implementation(kotlin("stdlib"))
+  implementation(kotlinLibrary("stdlib"))
   api(platform(kotlin("bom")))
 }
