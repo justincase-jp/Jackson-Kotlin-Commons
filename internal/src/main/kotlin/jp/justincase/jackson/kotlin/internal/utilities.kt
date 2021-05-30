@@ -16,7 +16,15 @@ import kotlin.reflect.KVariance
 import kotlin.reflect.full.companionObjectInstance
 
 val KClass<out Any>.effectiveCompanion
-  get() = objectInstance ?: companionObjectInstance
+  get() = try {
+    objectInstance ?: companionObjectInstance
+  } catch (e: Error) {
+    when (e.javaClass.name) {
+      // A corner case that `kotlin-reflect` does not work with a class defined in Java (harmless to ignore)
+      "kotlin.reflect.jvm.internal.KotlinReflectionInternalError" -> null
+      else -> throw e
+    }
+  }
 
 fun Throwable.throwIfFatal() {
   if (this is ThreadDeath || this is VirtualMachineError && this !is StackOverflowError) {
