@@ -11,6 +11,7 @@ tasks.getByName("test", Test::class) {
 
 dependencies {
   implementation(kotlin("reflect"))
+  api(platform(kotlin("bom")))
 
   implementation(guava())
 

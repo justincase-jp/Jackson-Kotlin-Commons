@@ -6,4 +6,5 @@ plugins {
 
 dependencies {
   implementation(kotlin("reflect"))
+  api(platform(kotlin("bom")))
 }

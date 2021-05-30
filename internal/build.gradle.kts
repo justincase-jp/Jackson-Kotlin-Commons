@@ -6,6 +6,7 @@ plugins {
 
 dependencies {
   implementation(kotlin("reflect"))
+  api(platform(kotlin("bom")))
 
   implementation(jacksonDataBinding())
   implementation(guava())
